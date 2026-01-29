@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>JobSwipe - Find Your Dream Job</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #FF6B6B;
+      --secondary: #4ECDC4;
+      --accent: #FFE66D;
+      --dark: #2C3E50;
+      --light: #F7F9FC;
+      --card-bg: #FFFFFF;
+      --text: #2C3E50;
+      --text-muted: #7F8C9A;
+      --shadow: 0 10px 40px rgba(0,0,0,0.15);
+      --gradient: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+    }
+
+    .dark {
+      --light: #1A1A2E;
+      --card-bg: #16213E;
+      --text: #EAEAEA;
+      --text-muted: #9BA4B5;
+      --shadow: 0 10px 40px rgba(0,0,0,0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      transition: background 0.3s ease;
+    }
+
+    .dark body {
+      background: var(--light);
+    }
+
+    /* Animated background */
+    .bg-shapes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-shape {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.1;
+      animation: float 20s infinite ease-in-out;
+    }
+
+    .bg-shape:nth-child(1) {
+      width: 400px;
+      height: 400px;
+      background: var(--primary);
+      top: -100px;
+      right: -100px;
+      animation-delay: 0s;
+    }
+
+    .bg-shape:nth-child(2) {
+      width: 300px;
+      height: 300px;
+      background: var(--secondary);
+      bottom: -50px;
+      left: -50px;
+      animation-delay: -5s;
+    }
+
+    .bg-shape:nth-child(3) {
+      width: 200px;
+      height: 200px;
+      background: var(--accent);
+      top: 50%;
+      left: 50%;
+      animation-delay: -10s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.05); }
+      50% { transform: translate(-20px, 20px) scale(0.95); }
+      75% { transform: translate(20px, 30px) scale(1.02); }
+    }
+
+    /* Header */
+    header {
+      width: 100%;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 45px;
+      height: 45px;
+      background: var(--gradient);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: white;
+      font-weight: 800;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    }
+
+    .logo-text {
+      font-size: 28px;
+      font-weight: 800;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Main container */
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Card stack */
+    .card-stack {
+      position: relative;
+      width: 100%;
+      height: 520px;
+      perspective: 1000px;
+    }
+
+    .job-card {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: var(--card-bg);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      cursor: grab;
+      transition: transform 0.1s ease, box-shadow 0.3s ease;
+      will-change: transform;
+      touch-action: none;
+    }
+
+    .job-card:active {
+      cursor: grabbing;
+    }
+
+    .job-card.behind {
+      transform: scale(0.95) translateY(15px);
+      z-index: 0;
+    }
+
+    .job-card.far-behind {
+      transform: scale(0.9) translateY(30px);
+      z-index: -1;
+    }
+
+    .job-card .card-image {
+      height: 200px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .company-logo-bg {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .company-logo-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.15;
+      background-image:
+        radial-gradient(circle at 20% 80%, rgba(255,255,255,0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.2) 0%, transparent 40%);
+    }
+
+    .company-logo {
+      width: 100px;
+      height: 100px;
+      background: white;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 36px;
+      font-weight: 700;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      position: relative;
+      z-index: 1;
+    }
+
+    .salary-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255,255,255,0.95);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--dark);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .remote-badge {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: var(--secondary);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .card-content {
+      padding: 24px;
+    }
+
+    .job-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+
+    .company-name {
+      font-size: 16px;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .job-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .meta-tag {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--light);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .dark .meta-tag {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .job-description {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .skill-tag {
+      background: linear-gradient(135deg, rgba(255,107,107,0.1) 0%, rgba(78,205,196,0.1) 100%);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid rgba(255,107,107,0.2);
+    }
+
+    /* Swipe indicators */
+    .swipe-indicator {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-size: 24px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .swipe-indicator.like {
+      right: 20px;
+      border: 4px solid var(--secondary);
+      color: var(--secondary);
+      transform: translateY(-50%) rotate(15deg);
+    }
+
+    .swipe-indicator.nope {
+      left: 20px;
+      border: 4px solid var(--primary);
+      color: var(--primary);
+      transform: translateY(-50%) rotate(-15deg);
+    }
+
+    /* Action buttons */
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .action-btn {
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      transition: all 0.2s ease;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    }
+
+    .action-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .action-btn:active {
+      transform: scale(0.95);
+    }
+
+    .action-btn.pass {
+      background: white;
+      color: var(--primary);
+    }
+
+    .action-btn.save {
+      background: white;
+      color: var(--accent);
+      width: 50px;
+      height: 50px;
+      font-size: 20px;
+    }
+
+    .action-btn.apply {
+      background: var(--gradient);
+      color: white;
+    }
+
+    /* Match popup */
+    .match-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .match-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .match-content {
+      text-align: center;
+      color: white;
+      transform: scale(0.8);
+      transition: transform 0.3s ease;
+    }
+
+    .match-overlay.show .match-content {
+      transform: scale(1);
+    }
+
+    .match-title {
+      font-size: 48px;
+      font-weight: 800;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+      animation: pulse 1s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .match-subtitle {
+      font-size: 18px;
+      opacity: 0.9;
+      margin-bottom: 30px;
+    }
+
+    .match-company {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 30px;
+    }
+
+    .match-btn {
+      background: var(--gradient);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      transition: transform 0.2s;
+    }
+
+    .match-btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state svg {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+
+    .empty-state h2 {
+      font-size: 24px;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      margin-bottom: 25px;
+    }
+
+    .restart-btn {
+      background: var(--gradient);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+      padding: 15px;
+      background: var(--card-bg);
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Animations */
+    @keyframes cardExit {
+      to {
+        opacity: 0;
+      }
+    }
+
+    .card-exit-left {
+      animation: cardExit 0.3s forwards;
+    }
+
+    .card-exit-right {
+      animation: cardExit 0.3s forwards;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-shapes">
+    <div class="bg-shape"></div>
+    <div class="bg-shape"></div>
+    <div class="bg-shape"></div>
+  </div>
+
+  <header>
+    <div class="logo">
+      <div class="logo-icon">J</div>
+      <span class="logo-text">JobSwipe</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card-stack" id="cardStack"></div>
+
+    <div class="actions" id="actions">
+      <button class="action-btn pass" id="passBtn" title="Pass">✕</button>
+      <button class="action-btn save" id="saveBtn" title="Save for later">★</button>
+      <button class="action-btn apply" id="applyBtn" title="Apply">♥</button>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="stat-value" id="appliedCount">0</div>
+        <div class="stat-label">Applied</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="savedCount">0</div>
+        <div class="stat-label">Saved</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="viewedCount">0</div>
+        <div class="stat-label">Viewed</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="match-overlay" id="matchOverlay">
+    <div class="match-content">
+      <div class="match-title">🎉 Applied!</div>
+      <p class="match-subtitle">Your application is on its way!</p>
+      <p class="match-company" id="matchCompany"></p>
+      <button class="match-btn" id="matchClose">Keep Swiping</button>
+    </div>
+  </div>
+
+  <script>
+    // Dark mode detection
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+      if (event.matches) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    });
+
+    // Fake job data
+    const jobs = [
+      {
+        id: 1,
+        title: "Senior Frontend Developer",
+        company: "NeonLabs",
+        logo: "NL",
+        logoColor: "#6C5CE7",
+        bgGradient: "linear-gradient(135deg, #6C5CE7 0%, #a29bfe 100%)",
+        salary: "$140k - $180k",
+        location: "San Francisco, CA",
+        type: "Full-time",
+        remote: true,
+        description: "Join our team to build cutting-edge web experiences using React, TypeScript, and modern CSS. We're looking for someone passionate about performance and user experience.",
+        skills: ["React", "TypeScript", "GraphQL", "Tailwind"]
+      },
+      {
+        id: 2,
+        title: "Product Designer",
+        company: "Figmatic",
+        logo: "FG",
+        logoColor: "#00B894",
+        bgGradient: "linear-gradient(135deg, #00B894 0%, #55efc4 100%)",
+        salary: "$120k - $150k",
+        location: "New York, NY",
+        type: "Full-time",
+        remote: true,
+        description: "We're seeking a creative Product Designer to shape the future of our design platform. You'll work on complex problems and create intuitive solutions.",
+        skills: ["Figma", "Prototyping", "User Research", "Design Systems"]
+      },
+      {
+        id: 3,
+        title: "Backend Engineer",
+        company: "DataForge",
+        logo: "DF",
+        logoColor: "#E17055",
+        bgGradient: "linear-gradient(135deg, #E17055 0%, #fab1a0 100%)",
+        salary: "$150k - $200k",
+        location: "Austin, TX",
+        type: "Full-time",
+        remote: false,
+        description: "Build scalable distributed systems that process millions of events per second. Experience with Go, Kubernetes, and event-driven architecture required.",
+        skills: ["Go", "Kubernetes", "PostgreSQL", "Redis"]
+      },
+      {
+        id: 4,
+        title: "ML Engineer",
+        company: "Synthwave AI",
+        logo: "SW",
+        logoColor: "#FD79A8",
+        bgGradient: "linear-gradient(135deg, #FD79A8 0%, #f8a5c2 100%)",
+        salary: "$180k - $250k",
+        location: "Seattle, WA",
+        type: "Full-time",
+        remote: true,
+        description: "Push the boundaries of AI at Synthwave. Work on LLMs, computer vision, and innovative ML research that ships to millions of users.",
+        skills: ["Python", "PyTorch", "LLMs", "MLOps"]
+      },
+      {
+        id: 5,
+        title: "DevOps Lead",
+        company: "CloudPeak",
+        logo: "CP",
+        logoColor: "#0984E3",
+        bgGradient: "linear-gradient(135deg, #0984E3 0%, #74b9ff 100%)",
+        salary: "$160k - $190k",
+        location: "Denver, CO",
+        type: "Full-time",
+        remote: true,
+        description: "Lead our infrastructure team and build the next generation of cloud-native tooling. You'll architect systems that power thousands of deployments daily.",
+        skills: ["AWS", "Terraform", "Docker", "CI/CD"]
+      },
+      {
+        id: 6,
+        title: "iOS Developer",
+        company: "AppCraft",
+        logo: "AC",
+        logoColor: "#00CEC9",
+        bgGradient: "linear-gradient(135deg, #00CEC9 0%, #81ecec 100%)",
+        salary: "$130k - $170k",
+        location: "Los Angeles, CA",
+        type: "Full-time",
+        remote: false,
+        description: "Create delightful mobile experiences for millions of users. We value clean code, beautiful animations, and obsessive attention to detail.",
+        skills: ["Swift", "SwiftUI", "Core Data", "Combine"]
+      },
+      {
+        id: 7,
+        title: "Growth Marketing Manager",
+        company: "RocketFuel",
+        logo: "RF",
+        logoColor: "#FDCB6E",
+        bgGradient: "linear-gradient(135deg, #FDCB6E 0%, #ffeaa7 100%)",
+        salary: "$110k - $140k",
+        location: "Miami, FL",
+        type: "Full-time",
+        remote: true,
+        description: "Drive user acquisition and retention strategies. You'll own the full marketing funnel from awareness to conversion and beyond.",
+        skills: ["SEO", "Paid Ads", "Analytics", "A/B Testing"]
+      },
+      {
+        id: 8,
+        title: "Security Engineer",
+        company: "VaultGuard",
+        logo: "VG",
+        logoColor: "#636E72",
+        bgGradient: "linear-gradient(135deg, #636E72 0%, #b2bec3 100%)",
+        salary: "$170k - $220k",
+        location: "Washington, DC",
+        type: "Full-time",
+        remote: true,
+        description: "Protect critical infrastructure and hunt for vulnerabilities. Experience with penetration testing, SIEM, and incident response required.",
+        skills: ["Pentesting", "SIEM", "Cloud Security", "Compliance"]
+      }
+    ];
+
+    let currentIndex = 0;
+    let appliedCount = 0;
+    let savedCount = 0;
+    let viewedCount = 0;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let currentY = 0;
+
+    const cardStack = document.getElementById('cardStack');
+    const actions = document.getElementById('actions');
+    const passBtn = document.getElementById('passBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const applyBtn = document.getElementById('applyBtn');
+    const matchOverlay = document.getElementById('matchOverlay');
+    const matchCompany = document.getElementById('matchCompany');
+    const matchClose = document.getElementById('matchClose');
+
+    function createCard(job, index) {
+      const card = document.createElement('div');
+      card.className = 'job-card';
+      card.dataset.id = job.id;
+
+      if (index === 1) card.classList.add('behind');
+      if (index === 2) card.classList.add('far-behind');
+
+      card.innerHTML = `
+        <div class="card-image">
+          <div class="company-logo-bg" style="background: ${job.bgGradient}">
+            <div class="company-logo" style="color: ${job.logoColor}">${job.logo}</div>
+          </div>
+          ${job.remote ? '<span class="remote-badge">Remote</span>' : ''}
+          <span class="salary-badge">${job.salary}</span>
+        </div>
+        <div class="card-content">
+          <h2 class="job-title">${job.title}</h2>
+          <p class="company-name">${job.company}</p>
+          <div class="job-meta">
+            <span class="meta-tag">📍 ${job.location}</span>
+            <span class="meta-tag">💼 ${job.type}</span>
+          </div>
+          <p class="job-description">${job.description}</p>
+          <div class="skills">
+            ${job.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+          </div>
+        </div>
+        <div class="swipe-indicator like">Apply</div>
+        <div class="swipe-indicator nope">Pass</div>
+      `;
+
+      return card;
+    }
+
+    function renderCards() {
+      cardStack.innerHTML = '';
+
+      if (currentIndex >= jobs.length) {
+        showEmptyState();
+        return;
+      }
+
+      // Render up to 3 cards
+      for (let i = Math.min(2, jobs.length - currentIndex - 1); i >= 0; i--) {
+        const jobIndex = currentIndex + i;
+        if (jobIndex < jobs.length) {
+          const card = createCard(jobs[jobIndex], i);
+          cardStack.appendChild(card);
+        }
+      }
+
+      // Add event listeners to top card
+      const topCard = cardStack.querySelector('.job-card:not(.behind):not(.far-behind)');
+      if (topCard) {
+        addCardListeners(topCard);
+      }
+    }
+
+    function showEmptyState() {
+      cardStack.innerHTML = `
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <h2>No more jobs!</h2>
+          <p>You've seen all available positions.</p>
+          <button class="restart-btn" onclick="restart()">Start Over</button>
+        </div>
+      `;
+      actions.style.display = 'none';
+    }
+
+    function restart() {
+      currentIndex = 0;
+      appliedCount = 0;
+      savedCount = 0;
+      viewedCount = 0;
+      updateStats();
+      actions.style.display = 'flex';
+      renderCards();
+    }
+
+    function addCardListeners(card) {
+      card.addEventListener('mousedown', onDragStart);
+      card.addEventListener('touchstart', onDragStart, { passive: true });
+    }
+
+    function onDragStart(e) {
+      isDragging = true;
+      const card = e.currentTarget;
+
+      if (e.type === 'touchstart') {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      } else {
+        startX = e.clientX;
+        startY = e.clientY;
+      }
+
+      currentX = 0;
+      currentY = 0;
+
+      document.addEventListener('mousemove', onDragMove);
+      document.addEventListener('touchmove', onDragMove);
+      document.addEventListener('mouseup', onDragEnd);
+      document.addEventListener('touchend', onDragEnd);
+    }
+
+    function onDragMove(e) {
+      if (!isDragging) return;
+
+      const topCard = cardStack.querySelector('.job-card:not(.behind):not(.far-behind)');
+      if (!topCard) return;
+
+      let clientX, clientY;
+      if (e.type === 'touchmove') {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+
+      currentX = clientX - startX;
+      currentY = clientY - startY;
+
+      const rotation = currentX * 0.1;
+      topCard.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotation}deg)`;
+
+      // Show swipe indicators
+      const likeIndicator = topCard.querySelector('.swipe-indicator.like');
+      const nopeIndicator = topCard.querySelector('.swipe-indicator.nope');
+
+      if (currentX > 50) {
+        likeIndicator.style.opacity = Math.min((currentX - 50) / 100, 1);
+        nopeIndicator.style.opacity = 0;
+      } else if (currentX < -50) {
+        nopeIndicator.style.opacity = Math.min((-currentX - 50) / 100, 1);
+        likeIndicator.style.opacity = 0;
+      } else {
+        likeIndicator.style.opacity = 0;
+        nopeIndicator.style.opacity = 0;
+      }
+    }
+
+    function onDragEnd() {
+      if (!isDragging) return;
+      isDragging = false;
+
+      document.removeEventListener('mousemove', onDragMove);
+      document.removeEventListener('touchmove', onDragMove);
+      document.removeEventListener('mouseup', onDragEnd);
+      document.removeEventListener('touchend', onDragEnd);
+
+      const topCard = cardStack.querySelector('.job-card:not(.behind):not(.far-behind)');
+      if (!topCard) return;
+
+      const threshold = 100;
+
+      if (currentX > threshold) {
+        swipeCard('right');
+      } else if (currentX < -threshold) {
+        swipeCard('left');
+      } else {
+        // Reset card position
+        topCard.style.transform = '';
+        topCard.querySelector('.swipe-indicator.like').style.opacity = 0;
+        topCard.querySelector('.swipe-indicator.nope').style.opacity = 0;
+      }
+    }
+
+    function swipeCard(direction) {
+      const topCard = cardStack.querySelector('.job-card:not(.behind):not(.far-behind)');
+      if (!topCard) return;
+
+      const job = jobs[currentIndex];
+      viewedCount++;
+
+      if (direction === 'right') {
+        topCard.style.transform = 'translate(150%, -50px) rotate(30deg)';
+        appliedCount++;
+        setTimeout(() => {
+          showMatch(job);
+        }, 200);
+      } else {
+        topCard.style.transform = 'translate(-150%, -50px) rotate(-30deg)';
+      }
+
+      topCard.style.transition = 'transform 0.3s ease';
+
+      setTimeout(() => {
+        currentIndex++;
+        updateStats();
+        renderCards();
+      }, 300);
+    }
+
+    function showMatch(job) {
+      matchCompany.textContent = `${job.title} at ${job.company}`;
+      matchOverlay.classList.add('show');
+    }
+
+    function updateStats() {
+      document.getElementById('appliedCount').textContent = appliedCount;
+      document.getElementById('savedCount').textContent = savedCount;
+      document.getElementById('viewedCount').textContent = viewedCount;
+    }
+
+    // Button handlers
+    passBtn.addEventListener('click', () => swipeCard('left'));
+    applyBtn.addEventListener('click', () => swipeCard('right'));
+    saveBtn.addEventListener('click', () => {
+      savedCount++;
+      updateStats();
+      // Visual feedback
+      saveBtn.style.transform = 'scale(1.2)';
+      setTimeout(() => {
+        saveBtn.style.transform = '';
+      }, 200);
+    });
+
+    matchClose.addEventListener('click', () => {
+      matchOverlay.classList.remove('show');
+    });
+
+    // Initialize
+    renderCards();
+  </script>
+</body>
+</html>
+
