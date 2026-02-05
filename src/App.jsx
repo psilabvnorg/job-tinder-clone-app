@@ -1,549 +1,199 @@
-import { useMemo, useState, useEffect, useRef } from 'react'
+import { useState, useCallback } from 'react'
 import JobSwipe from './components/JobSwipe'
+import AdvisorPage from './components/AdvisorPage'
+import CVFixerPage from './components/CVFixerPage'
+import ChatPage from './components/ChatPage'
 
-const advisors = [
-  {
-    name: 'Steve Jobs',
-    title: 'Product Visionary',
-    style: 'Focus on clarity, simplicity, and storytelling.',
-    headline: 'Design your career like a product launch.',
-    summary:
-      'Obsess over the experience you create for users. Remove everything that is not essential. Build a career narrative that people can feel.',
-    focus: [
-      'Craft a portfolio that tells one clear story.',
-      'Prioritize roles that allow deep craftsmanship.',
-      'Say no to distractions so you can ship legendary work.'
-    ],
-    voice: [
-      'Challenging but inspiring.',
-      'Encourages bold bets and taste-driven decisions.',
-      'Pushes for simplicity, not compromise.'
-    ],
-    accent: '#FFE9E6',
-    quote: '“Stay hungry. Stay foolish.”',
-    badge: 'Simplicity Wizard'
-  },
-  {
-    name: 'Warren Buffett',
-    title: 'Long-Term Strategist',
-    style: 'Build compounding value through patience and trust.',
-    headline: 'Invest in yourself before any role.',
-    summary:
-      'Choose companies with durable cultures and leaders who respect craft. Focus on steady growth, not short-term hype.',
-    focus: [
-      'Deepen your fundamentals and communication skills.',
-      'Select mentors with integrity and long-term vision.',
-      'Make career moves that compound relationships.'
-    ],
-    voice: [
-      'Calm, measured, and practical.',
-      'Values consistency over flash.',
-      'Encourages reputation-building.'
-    ],
-    accent: '#FFF8DA',
-    quote: '“The best investment you can make is in yourself.”',
-    badge: 'Long-Game Mastermind'
-  },
-  {
-    name: 'Elon Musk',
-    title: 'First-Principles Builder',
-    style: 'Ambitious, technical, and mission-obsessed.',
-    headline: 'Pick the hardest problems and move faster.',
-    summary:
-      'If the mission energizes you, obsess over the fundamentals and iterate relentlessly. Speed and curiosity beat credentials.',
-    focus: [
-      'Build proof-of-work that shows technical depth.',
-      'Seek teams shipping ambitious products quickly.',
-      'Learn first principles so you can simplify complexity.'
-    ],
-    voice: [
-      'Urgent and direct.',
-      'Values experimentation and rapid iteration.',
-      'Encourages audacious goals.'
-    ],
-    accent: '#E9FAF7',
-    quote: '“Reason from first principles, then move fast.”',
-    badge: 'First-Principles Hacker'
-  }
-]
+// SVG Icons
+const BriefcaseIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+    <rect width="20" height="14" x="2" y="6" rx="2"/>
+  </svg>
+)
 
-const defaultCv = `Alex Morgan
-Product Designer | alexmorgan.design | Austin, TX
+const HeartIcon = ({ filled }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+  </svg>
+)
 
-Experience
-- Lead product designer at NextWave (2020–Present)
-  • Led redesign of onboarding, improved activation by 26%
-  • Built a design system with 42 reusable components
-- UX designer at Harbor Labs (2017–2020)
-  • Shipped 4 major mobile releases with cross-functional team
+const UserIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="8" r="5"/>
+    <path d="M20 21a8 8 0 0 0-16 0"/>
+  </svg>
+)
 
-Skills
-Figma, Design Systems, UX Research, Prototyping, HTML/CSS
+const SparklesIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+  </svg>
+)
 
-Education
-BA in Visual Design, University of Texas`
+const FileTextIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+    <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+    <path d="M10 9H8"/>
+    <path d="M16 13H8"/>
+    <path d="M16 17H8"/>
+  </svg>
+)
 
-const chatPrompts = [
-  'Ask me to rewrite a bullet.',
-  'Share the role you are targeting.',
-  'Need a tighter summary?'
-]
+const MessageIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+  </svg>
+)
 
-const resumePersonas = [
-  { label: 'Professional', value: 'professional' },
-  { label: 'Bold & Confident', value: 'bold' },
-  { label: 'Minimalist', value: 'minimalist' },
-  { label: 'Narrative/Story-driven', value: 'narrative' }
-]
+const XIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
+    <path d="M18 6 6 18M6 6l12 12"/>
+  </svg>
+)
 
-const advisorReplies = {
-  'steve jobs': 'Keep the story singular. Strip it down to the moment you changed the trajectory of a product.',
-  'warren buffett': 'Aim for steady compounding—show consistency in your metrics, not just peaks.',
-  'elon musk': 'Start from first principles. What is the simplest proof of impact you can show?'
-}
-
-const getAdvisorReply = (advisorName, prompt) => {
-  const lower = advisorName.toLowerCase()
-  const base = advisorReplies[lower] || 'Tell me what outcome you want to drive, and we will reverse engineer the story.'
-  return `${base} Now, refine your question: ${prompt}`
-}
-
-const generateChatResponse = (prompt, persona) => {
-  const lower = prompt.toLowerCase()
-  if (lower.includes('rewrite') || lower.includes('bullet')) {
-    return 'Try: "Led a cross-functional redesign that lifted activation by 26% and reduced onboarding time by 18%."'
-  }
-  if (lower.includes('summary') || lower.includes('profile')) {
-    return 'Summary idea: "Product designer focused on growth and onboarding flows, delivering measurable lifts in activation and retention."'
-  }
-  if (lower.includes('skills')) {
-    return 'Group skills by category: "Product Design, Research, Systems" to improve scanability.'
-  }
-  if (persona === 'bold') {
-    return 'Own your impact: "I drove a 26% activation lift by reimagining the onboarding flow."'
-  }
-  if (persona === 'minimalist') {
-    return 'Keep it tight: "Redesigned onboarding, +26% activation."'
-  }
-  if (persona === 'narrative') {
-    return 'Tell the story: "I noticed drop-offs in onboarding, then rebuilt the flow to lift activation by 26%."'
-  }
-  return 'Tell me the role you want and I will tailor your headline and bullet points.'
-}
-
-const generateCvAdvice = (text) => {
-  const advice = []
-  const words = text.trim().split(/\s+/).filter(Boolean).length
-  if (words < 80) {
-    advice.push('Add more measurable outcomes so recruiters see your impact quickly.')
-  } else {
-    advice.push('Strong length—now tighten each bullet to one crisp achievement.')
-  }
-  if (!/metrics|%|\d+/.test(text)) {
-    advice.push('Include metrics (%, $ or time saved) to quantify results.')
-  }
-  if (!/portfolio|case study|github|behance|dribbble/i.test(text)) {
-    advice.push('Add a portfolio or case study link near your header.')
-  }
-  if (!/summary|profile|objective/i.test(text)) {
-    advice.push('Add a 2-3 line summary targeting your ideal role.')
-  }
-  advice.push('Reorder skills to match the top job description keywords.')
-  return advice
-}
-
-const getImpactScore = (text) => {
-  let score = 40
-  if (/\d+|%/.test(text)) score += 20
-  if (/summary|profile|objective/i.test(text)) score += 15
-  if (/portfolio|case study|github|behance|dribbble/i.test(text)) score += 10
-  if (text.split(/\s+/).length > 120) score += 10
-  return Math.min(score, 100)
-}
-
-const detectSections = (text) => {
-  const lines = text.split('\n')
-  const sections = []
-  let index = 0
-  lines.forEach((line) => {
-    const trimmed = line.trim()
-    const match = ['experience', 'achievements', 'skills', 'summary', 'education'].find(
-      (section) => trimmed.toLowerCase() === section
-    )
-    if (match) {
-      sections.push({ label: match.charAt(0).toUpperCase() + match.slice(1), index })
-    }
-    index += line.length + 1
-  })
-  return sections
-}
-
-const highlightCvLines = (text) => {
-  const strongVerbs = ['led', 'built', 'shipped', 'designed', 'delivered']
-  return text.split('\n').map((line, idx) => {
-    const lower = line.toLowerCase()
-    const hasMetric = /\d+|%/.test(line)
-    const isBullet = line.trim().startsWith('•') || line.trim().startsWith('-')
-    const isStrong = strongVerbs.some((verb) => lower.includes(verb))
-    const tooLong = line.length > 90
-    let className = ''
-    if (isBullet && !hasMetric) className = 'highlight-missing'
-    if (tooLong) className = 'highlight-weak'
-    if (isStrong) className = 'highlight-strong'
-    return { text: line || ' ', className, key: `${idx}-${line}` }
-  })
-}
+const MapPinIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
+    <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
+    <circle cx="12" cy="10" r="3"/>
+  </svg>
+)
 
 export default function App() {
-  const [selectedAdvisor, setSelectedAdvisor] = useState(0)
-  const [cvText, setCvText] = useState(defaultCv)
-  const [chatInput, setChatInput] = useState('')
-  const [chatLog, setChatLog] = useState([
-    {
-      role: 'ai',
-      text: "Share what role you're targeting and I'll help rewrite bullet points with stronger impact."
-    }
-  ])
-  const [chatPersona, setChatPersona] = useState('professional')
-  const [isThinking, setIsThinking] = useState(false)
-  const [advisorQuestion, setAdvisorQuestion] = useState('')
-  const [advisorResponse, setAdvisorResponse] = useState('')
-  const [advisorPanelOpen, setAdvisorPanelOpen] = useState(false)
-  const [swipeStats, setSwipeStats] = useState({ saved: 0, passed: 0 })
+  const [activeView, setActiveView] = useState('swipe')
+  const [savedJobs, setSavedJobs] = useState([])
+  const [passedJobs, setPassedJobs] = useState([])
 
-  const adviceList = useMemo(() => generateCvAdvice(cvText), [cvText])
-  const advisor = advisors[selectedAdvisor]
-  const impactScore = useMemo(() => getImpactScore(cvText), [cvText])
-  const sections = useMemo(() => detectSections(cvText), [cvText])
-  const highlightedLines = useMemo(() => highlightCvLines(cvText), [cvText])
-
-  const sectionRefs = {
-    swipe: useRef(null),
-    advisors: useRef(null),
-    cv: useRef(null),
-    chat: useRef(null)
-  }
-
-  const progressSteps = [
-    { label: 'Jobs Swiped', done: swipeStats.saved + swipeStats.passed > 0 },
-    { label: 'Advisor Reviewed', done: advisorPanelOpen || selectedAdvisor !== 0 },
-    { label: 'CV Improved', done: cvText.trim() !== defaultCv.trim() }
-  ]
-  const progressPercent = Math.round((progressSteps.filter((step) => step.done).length / progressSteps.length) * 100)
-
-  useEffect(() => {
-    const onScroll = () => {
-      const entries = [
-        { key: 'swipe', color: '#FFE9E6', ref: sectionRefs.swipe },
-        { key: 'advisors', color: '#FFF8DA', ref: sectionRefs.advisors },
-        { key: 'cv', color: '#E9FAF7', ref: sectionRefs.cv },
-        { key: 'chat', color: '#E6F0FF', ref: sectionRefs.chat }
-      ]
-      const scrollPosition = window.scrollY + window.innerHeight / 3
-      let active = entries[0]
-      entries.forEach((entry) => {
-        if (entry.ref.current && entry.ref.current.offsetTop <= scrollPosition) {
-          active = entry
-        }
-      })
-      document.documentElement.style.setProperty('--section-accent', active.color)
-    }
-    onScroll()
-    window.addEventListener('scroll', onScroll)
-    return () => window.removeEventListener('scroll', onScroll)
+  const handleSwipeRight = useCallback((job) => {
+    setSavedJobs((prev) => {
+      if (prev.some((j) => j.id === job.id)) return prev
+      return [...prev, job]
+    })
   }, [])
 
-  const handleSend = () => {
-    if (!chatInput.trim()) return
-    const prompt = chatInput.trim()
-    setChatLog((prev) => [...prev, { role: 'user', text: prompt }])
-    setChatInput('')
-    setIsThinking(true)
-    setTimeout(() => {
-      setChatLog((prev) => [...prev, { role: 'ai', text: generateChatResponse(prompt, chatPersona) }])
-      setIsThinking(false)
-    }, 500)
-  }
+  const handleSwipeLeft = useCallback((job) => {
+    setPassedJobs((prev) => {
+      if (prev.some((j) => j.id === job.id)) return prev
+      return [...prev, job]
+    })
+  }, [])
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') handleSend()
-  }
+  const handleRemoveSaved = useCallback((jobId) => {
+    setSavedJobs((prev) => prev.filter((j) => j.id !== jobId))
+  }, [])
 
-  const handleAdvisorAsk = () => {
-    if (!advisorQuestion.trim()) return
-    setAdvisorPanelOpen(true)
-    setAdvisorResponse(getAdvisorReply(advisor.name, advisorQuestion.trim()))
-    setAdvisorQuestion('')
-  }
-
-  const handleSectionJump = (index) => {
-    const textarea = document.getElementById('cv-textarea')
-    if (!textarea) return
-    textarea.focus()
-    textarea.setSelectionRange(index, index)
-    const lineNumber = textarea.value.slice(0, index).split('\\n').length
-    const lineHeight = 20
-    textarea.scrollTop = Math.max(0, (lineNumber - 3) * lineHeight)
-  }
-
-  const chatSuggestions = useMemo(() => {
-    const lower = chatInput.toLowerCase()
-    if (lower.includes('summary')) return ['Strengthen summary', 'Professional headline', 'Narrative hook']
-    if (lower.includes('skills')) return ['ATS-friendly version', 'Improve skills', 'Trim list']
-    if (lower.includes('bullet')) return ['Rewrite bullet', 'Add metrics', 'Use stronger verbs']
-    return ['Rewrite bullet', 'Strengthen summary', 'ATS-friendly version', 'Improve skills']
-  }, [chatInput])
+  const navItems = [
+    { id: 'swipe', icon: BriefcaseIcon, label: 'Swipe' },
+    { id: 'matched', icon: () => <HeartIcon filled={false} />, label: 'Matched', badge: savedJobs.length },
+    { id: 'advisor', icon: SparklesIcon, label: 'Advisor' },
+    { id: 'cv', icon: FileTextIcon, label: 'CV' },
+    { id: 'chat', icon: MessageIcon, label: 'Chat' },
+  ]
 
   return (
-    <div className="page">
+    <div className="app-container">
+      {/* Header */}
       <header className="header">
-        <div>
-          <h1 className="logo">JobSwipe</h1>
-          <p className="subtitle">Career guidance + CV upgrades</p>
+        <div className="header-brand">
+          <div className="header-logo">💼</div>
+          <span className="header-title">JobSwipe</span>
         </div>
-        <div className="progress-tracker">
-          <div className="progress-header">
-            <span>Progress</span>
-            <span>{progressPercent}%</span>
-          </div>
-          <div className="progress-bar">
-            <div className="progress-fill" style={{ width: `${progressPercent}%` }} />
-          </div>
-          <div className="progress-steps">
-            {progressSteps.map((step) => (
-              <span key={step.label} className={`progress-step ${step.done ? 'done' : ''}`}>
-                {step.label}
-              </span>
-            ))}
-          </div>
+        <div className="header-actions">
+          <button 
+            className="header-btn"
+            onClick={() => setActiveView('matched')}
+          >
+            <HeartIcon filled={false} />
+            {savedJobs.length > 0 && (
+              <span className="badge">{savedJobs.length}</span>
+            )}
+          </button>
+          <button 
+            className="header-btn"
+            onClick={() => setActiveView('profile')}
+          >
+            <UserIcon />
+          </button>
         </div>
       </header>
 
-      <nav className="sticky-nav">
-        <a href="#job-swipe">Job Swipe</a>
-        <a href="#advisors">Advisors</a>
-        <a href="#cv-fixer">CV Fixer</a>
-        <a href="#chat-assistant">Chat</a>
-      </nav>
+      {/* Main Content */}
+      <main className="main-content">
+        {activeView === 'swipe' && (
+          <JobSwipe
+            onSwipeLeft={handleSwipeLeft}
+            onSwipeRight={handleSwipeRight}
+          />
+        )}
 
-      <section id="job-swipe" className="section" ref={sectionRefs.swipe}>
-        <h2 className="section-title">Job Swipe</h2>
-        <p className="section-subtitle">
-          Swipe right to save jobs you like, swipe left to pass. Find your next opportunity!
-        </p>
-        <JobSwipe onStatsChange={setSwipeStats} />
-      </section>
+        {activeView === 'matched' && (
+          <div className="saved-view">
+            <div className="saved-header">
+              <h2 className="saved-title">Matched Jobs</h2>
+              <p className="saved-subtitle">
+                {savedJobs.length} {savedJobs.length === 1 ? 'job' : 'jobs'} matched
+              </p>
+            </div>
 
-      <section id="advisors" className="section" ref={sectionRefs.advisors}>
-        <h2 className="section-title">Career Advice Lounge</h2>
-        <p className="section-subtitle">
-          LLM-styled mentorship inspired by Steve Jobs, Warren Buffett, and Elon Musk.
-        </p>
-        <div className="advisor-row">
-          {advisors.map((item, index) => (
-            <div
-              key={item.name}
-              className={`advisor-card ${index === selectedAdvisor ? 'active' : ''}`}
-              style={{ backgroundColor: item.accent }}
-              onClick={() => setSelectedAdvisor(index)}
-            >
-              <div className="advisor-name">{item.name}</div>
-              <div className="advisor-title">{item.title}</div>
-              <div className="advisor-style">{item.style}</div>
-              <div className="advisor-badge">{item.badge}</div>
-              {index === selectedAdvisor && <div className="advisor-quote">{item.quote}</div>}
-            </div>
-          ))}
-        </div>
-        <div className="advisor-detail">
-          <div className="advisor-headline">{advisor.headline}</div>
-          <p className="advisor-summary">{advisor.summary}</p>
-          <div className="detail-columns">
-            <div className="detail-card">
-              <div className="detail-title">Actionable Focus</div>
-              {advisor.focus.map((item) => (
-                <div key={item} className="detail-bullet">• {item}</div>
-              ))}
-            </div>
-            <div className="detail-card">
-              <div className="detail-title">Signature Tone</div>
-              {advisor.voice.map((item) => (
-                <div key={item} className="detail-bullet">• {item}</div>
-              ))}
-            </div>
-          </div>
-          <div className={`advisor-panel ${advisorPanelOpen ? 'open' : ''}`}>
-            <div className="advisor-panel-header">
-              <span>Ask {advisor.name.split(' ')[0]}</span>
-              <button className="panel-toggle" onClick={() => setAdvisorPanelOpen((prev) => !prev)}>
-                {advisorPanelOpen ? 'Hide' : 'Ask'}
-              </button>
-            </div>
-            <div className="advisor-panel-body">
-              <input
-                type="text"
-                className="advisor-input"
-                placeholder="Steve, how can I improve storytelling in my CV?"
-                value={advisorQuestion}
-                onChange={(e) => setAdvisorQuestion(e.target.value)}
-              />
-              <button className="primary-button" onClick={handleAdvisorAsk}>
-                <span className="primary-button-text">Send question</span>
-              </button>
-              {advisorResponse && <p className="advisor-response">{advisorResponse}</p>}
-            </div>
-          </div>
-          <p className="disclaimer">
-            Advice is generated for inspiration and does not represent real-world endorsements.
-          </p>
-        </div>
-      </section>
-
-      <section id="cv-fixer" className="section" ref={sectionRefs.cv}>
-        <h2 className="section-title">Profile & CV Fixer</h2>
-        <p className="section-subtitle">
-          Preview your CV, get instant critique, and chat with a fixer assistant.
-        </p>
-        <div className="cv-layout">
-          <aside className="cv-sidebar">
-            <div className="sidebar-title">Sections</div>
-            {sections.map((section) => (
-              <button key={section.label} className="sidebar-link" onClick={() => handleSectionJump(section.index)}>
-                {section.label}
-              </button>
-            ))}
-            <div className="impact-card">
-              <div className="impact-title">Impact Score</div>
-              <div className="impact-score">{impactScore}%</div>
-              <p className="impact-sub">Could use more metrics + stronger verbs.</p>
-            </div>
-          </aside>
-          <div className="card-row">
-            <div className="card">
-              <div className="card-title">Your CV</div>
-              <textarea
-                id="cv-textarea"
-                className="cv-input"
-                value={cvText}
-                onChange={(e) => setCvText(e.target.value)}
-              />
-              <div className="badge">
-                <span className="badge-text">✨ LLM-generated critique</span>
+            {savedJobs.length === 0 ? (
+              <div className="empty-state">
+                <HeartIcon filled={false} />
+                <div className="empty-state-title">No matched jobs yet</div>
+                <div className="empty-state-text">
+                  Swipe right on jobs you like to match with them
+                </div>
               </div>
-            </div>
-            <div className="card">
-              <div className="card-title">Live Highlights</div>
-              <div className="cv-preview">
-                {highlightedLines.map((line) => (
-                  <div key={line.key} className={`cv-line ${line.className}`}>{line.text}</div>
+            ) : (
+              <div className="saved-list">
+                {savedJobs.map((job) => (
+                  <div key={job.id} className="saved-card">
+                    <div className="saved-card-header">
+                      <div>
+                        <div className="saved-card-title">{job.title}</div>
+                        <div className="saved-card-company">{job.company}</div>
+                      </div>
+                      <button 
+                        className="remove-btn"
+                        onClick={() => handleRemoveSaved(job.id)}
+                      >
+                        <XIcon />
+                      </button>
+                    </div>
+                    <div className="saved-card-salary">{job.salary}</div>
+                    <div className="saved-card-meta">
+                      <span><MapPinIcon /> {job.location}</span>
+                      {job.remote && <span>🏠 Remote</span>}
+                    </div>
+                  </div>
                 ))}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="card-row">
-          <div className="card">
-            <div className="card-title">CV Advice</div>
-            {adviceList.map((item) => (
-              <div key={item} className="detail-bullet">• {item}</div>
-            ))}
-          </div>
-          <div className="card">
-            <div className="card-title">Side-by-Side Rewrite</div>
-            <div className="rewrite-row">
-              <div>
-                <div className="rewrite-label">Original</div>
-                <div className="rewrite-text">• Shipped 4 major mobile releases with cross-functional team</div>
-              </div>
-              <div>
-                <div className="rewrite-label">Improved</div>
-                <div className="rewrite-text improved">• Delivered 4 mobile releases with a 6-person squad, cutting QA time by 18%</div>
-              </div>
-            </div>
-            <div className="rewrite-row">
-              <div>
-                <div className="rewrite-label">Original</div>
-                <div className="rewrite-text">• Led redesign of onboarding, improved activation by 26%</div>
-              </div>
-              <div>
-                <div className="rewrite-label">Improved</div>
-                <div className="rewrite-text improved">• Rebuilt onboarding flow and lifted activation +26% within 90 days</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="chat-assistant" className="section" ref={sectionRefs.chat}>
-        <h2 className="section-title">Chat Assistant</h2>
-        <p className="section-subtitle">Talk to a resume strategist and get fast improvements.</p>
-        <div className="chat-card">
-          <div className="chat-header">
-            <div>
-              <div className="card-title">Fix-it Chat</div>
-              <div className="chat-sub">
-                {chatPrompts[Math.floor(Date.now() / 1000) % chatPrompts.length]}
-              </div>
-            </div>
-            <div className="persona-select">
-              <span className="persona-label">Persona</span>
-              <select value={chatPersona} onChange={(e) => setChatPersona(e.target.value)}>
-                {resumePersonas.map((persona) => (
-                  <option key={persona.value} value={persona.value}>{persona.label}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className="suggestion-row">
-            {chatSuggestions.map((chip) => (
-              <button key={chip} className="suggestion-chip" onClick={() => setChatInput(chip)}>
-                {chip}
-              </button>
-            ))}
-          </div>
-          <div className="chat-log">
-            {chatLog.map((entry, index) => (
-              <div
-                key={`${entry.role}-${index}`}
-                className={`chat-bubble ${entry.role === 'user' ? 'chat-user' : 'chat-ai'}`}
-              >
-                <span className="chat-text">{entry.text}</span>
-              </div>
-            ))}
-            {isThinking && (
-              <div className="chat-bubble chat-ai">
-                <span className="chat-text">Working</span>
-                <span className="dot-loader">
-                  <span />
-                  <span />
-                  <span />
-                </span>
               </div>
             )}
           </div>
-          <div className="chat-input-row">
-            <input
-              type="text"
-              className="chat-input"
-              value={chatInput}
-              onChange={(e) => setChatInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask for a rewrite or new section..."
-            />
-            <button className="primary-button" onClick={handleSend}>
-              <span className="primary-button-text">Send</span>
-            </button>
-          </div>
-        </div>
-      </section>
+        )}
 
-      <footer className="footer-nav">
-        <a href="#job-swipe">Swipe</a>
-        <a href="#job-swipe">Matched</a>
-        <a href="#advisors">Advisor</a>
-        <a href="#cv-fixer">CV</a>
-        <a href="#chat-assistant">Chat</a>
-      </footer>
+        {activeView === 'advisor' && <AdvisorPage />}
+
+        {activeView === 'cv' && <CVFixerPage />}
+
+        {activeView === 'chat' && <ChatPage />}
+      </main>
+
+      {/* Bottom Navigation */}
+      <nav className="bottom-nav">
+        <div className="bottom-nav-inner">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              className={`nav-item ${activeView === item.id ? 'active' : ''}`}
+              onClick={() => setActiveView(item.id)}
+            >
+              <item.icon />
+              <span>{item.label}</span>
+            </button>
+          ))}
+        </div>
+      </nav>
     </div>
   )
 }
