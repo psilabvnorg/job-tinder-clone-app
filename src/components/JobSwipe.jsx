@@ -27,16 +27,53 @@ const ChevronDownIcon = () => (
   </svg>
 )
 
+const FilterIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
+    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+  </svg>
+)
+
+const MapPinIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+    <circle cx="12" cy="10" r="3"/>
+  </svg>
+)
+
+const BriefcaseIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+    <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
+    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+  </svg>
+)
+
 export default function JobSwipe({ onSwipeLeft, onSwipeRight, onViewDetails }) {
-  const { jobs, loading, source } = useJobs()
+  const { 
+    jobs, 
+    loading, 
+    source,
+    categories,
+    locations,
+    categoryFilter,
+    locationFilter,
+    setCategoryFilter,
+    setLocationFilter,
+  } = useJobs()
+  
   const [currentIndex, setCurrentIndex] = useState(0)
   const [deltaX, setDeltaX] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
+  const [showFilters, setShowFilters] = useState(false)
   
   const startX = useRef(0)
   const scrollRef = useRef(null)
   const threshold = 100
+
+  // Reset index when filters change
+  useEffect(() => {
+    setCurrentIndex(0)
+  }, [categoryFilter, locationFilter])
 
   const currentJob = jobs[currentIndex]
   const requirements = Array.isArray(currentJob?.requirements)
@@ -44,6 +81,8 @@ export default function JobSwipe({ onSwipeLeft, onSwipeRight, onViewDetails }) {
     : currentJob?.requirements
       ? [currentJob.requirements]
       : []
+
+  const activeFilterCount = (categoryFilter ? 1 : 0) + (locationFilter ? 1 : 0)
 
   useEffect(() => {
     setShowDetails(false)
@@ -129,16 +168,152 @@ export default function JobSwipe({ onSwipeLeft, onSwipeRight, onViewDetails }) {
 
   if (!currentJob) {
     return (
-      <div className="empty-state">
-        <HeartIcon />
-        <div className="empty-state-title">Hết việc để xem!</div>
-        <div className="empty-state-text">Quay lại sau để xem cơ hội mới</div>
+      <div className="swipe-view">
+        {/* Filter Bar */}
+        <div className="filter-bar">
+          <button 
+            className={`filter-toggle-btn ${showFilters ? 'active' : ''}`}
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            <FilterIcon />
+            <span>Bộ lọc</span>
+            {activeFilterCount > 0 && (
+              <span className="filter-count">{activeFilterCount}</span>
+            )}
+          </button>
+        </div>
+
+        {showFilters && (
+          <div className="filter-panel">
+            <div className="filter-group">
+              <label className="filter-label">
+                <BriefcaseIcon />
+                <span>Ngành nghề</span>
+              </label>
+              <select 
+                className="filter-select"
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+              >
+                <option value="">Tất cả ngành nghề</option>
+                {categories.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div className="filter-group">
+              <label className="filter-label">
+                <MapPinIcon />
+                <span>Địa điểm</span>
+              </label>
+              <select 
+                className="filter-select"
+                value={locationFilter}
+                onChange={(e) => setLocationFilter(e.target.value)}
+              >
+                <option value="">Tất cả địa điểm</option>
+                {locations.map(loc => (
+                  <option key={loc} value={loc}>{loc}</option>
+                ))}
+              </select>
+            </div>
+
+            {activeFilterCount > 0 && (
+              <button 
+                className="clear-filters-btn"
+                onClick={() => {
+                  setCategoryFilter('')
+                  setLocationFilter('')
+                }}
+              >
+                Xóa bộ lọc
+              </button>
+            )}
+          </div>
+        )}
+
+        <div className="empty-state">
+          <HeartIcon />
+          <div className="empty-state-title">Hết việc để xem!</div>
+          <div className="empty-state-text">
+            {activeFilterCount > 0 
+              ? 'Thử thay đổi bộ lọc để xem thêm việc làm'
+              : 'Quay lại sau để xem cơ hội mới'}
+          </div>
+        </div>
       </div>
     )
   }
 
   return (
     <div className="swipe-view">
+      {/* Filter Bar */}
+      <div className="filter-bar">
+        <button 
+          className={`filter-toggle-btn ${showFilters ? 'active' : ''}`}
+          onClick={() => setShowFilters(!showFilters)}
+        >
+          <FilterIcon />
+          <span>Bộ lọc</span>
+          {activeFilterCount > 0 && (
+            <span className="filter-count">{activeFilterCount}</span>
+          )}
+        </button>
+        <div className="filter-info">
+          {jobs.length} việc làm
+        </div>
+      </div>
+
+      {showFilters && (
+        <div className="filter-panel">
+          <div className="filter-group">
+            <label className="filter-label">
+              <BriefcaseIcon />
+              <span>Ngành nghề</span>
+            </label>
+            <select 
+              className="filter-select"
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+            >
+              <option value="">Tất cả ngành nghề</option>
+              {categories.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
+          
+          <div className="filter-group">
+            <label className="filter-label">
+              <MapPinIcon />
+              <span>Địa điểm</span>
+            </label>
+            <select 
+              className="filter-select"
+              value={locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value)}
+            >
+              <option value="">Tất cả địa điểm</option>
+              {locations.map(loc => (
+                <option key={loc} value={loc}>{loc}</option>
+              ))}
+            </select>
+          </div>
+
+          {activeFilterCount > 0 && (
+            <button 
+              className="clear-filters-btn"
+              onClick={() => {
+                setCategoryFilter('')
+                setLocationFilter('')
+              }}
+            >
+              Xóa bộ lọc
+            </button>
+          )}
+        </div>
+      )}
       <div className="swipe-deck-container">
         <div className="swipe-deck">
           {/* Background cards for stack effect */}

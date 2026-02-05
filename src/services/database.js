@@ -110,6 +110,7 @@ export async function getJobs(limit = 100, offset = 0) {
       backgroundImage: job.background_image,
       url: job.url,
       source: job.source,
+      category: job.category || job.job_type || 'Khác',
     }
   })
 }
@@ -158,6 +159,7 @@ export async function searchJobs(keyword) {
       backgroundImage: row.background_image,
       url: row.url,
       source: row.source,
+      category: row.category || row.job_type || 'Khác',
     })
   }
   stmt.free()
