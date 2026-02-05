@@ -84,11 +84,11 @@ export default function App() {
   }, [])
 
   const navItems = [
-    { id: 'swipe', icon: BriefcaseIcon, label: 'Swipe' },
-    { id: 'matched', icon: () => <HeartIcon filled={false} />, label: 'Matched', badge: savedJobs.length },
-    { id: 'advisor', icon: SparklesIcon, label: 'Advisor' },
-    { id: 'cv', icon: FileTextIcon, label: 'CV' },
-    { id: 'chat', icon: MessageIcon, label: 'Chat' },
+    { id: 'swipe', icon: BriefcaseIcon, label: 'Vuốt' },
+    { id: 'matched', icon: () => <HeartIcon filled={false} />, label: 'Đã lưu', badge: savedJobs.length },
+    { id: 'advisor', icon: SparklesIcon, label: 'Cố vấn' },
+    { id: 'cv', icon: FileTextIcon, label: 'Hồ sơ' },
+    { id: 'chat', icon: MessageIcon, label: 'Trò chuyện' },
   ]
 
   return (
@@ -130,18 +130,18 @@ export default function App() {
         {activeView === 'matched' && (
           <div className="saved-view">
             <div className="saved-header">
-              <h2 className="saved-title">Matched Jobs</h2>
+              <h2 className="saved-title">Việc đã lưu</h2>
               <p className="saved-subtitle">
-                {savedJobs.length} {savedJobs.length === 1 ? 'job' : 'jobs'} matched
+                {savedJobs.length} {savedJobs.length === 1 ? 'việc' : 'việc'} đã lưu
               </p>
             </div>
 
             {savedJobs.length === 0 ? (
               <div className="empty-state">
                 <HeartIcon filled={false} />
-                <div className="empty-state-title">No matched jobs yet</div>
+                <div className="empty-state-title">Chưa có việc nào được lưu</div>
                 <div className="empty-state-text">
-                  Swipe right on jobs you like to match with them
+                  Vuốt sang phải để lưu việc bạn thích
                 </div>
               </div>
             ) : (
@@ -163,7 +163,7 @@ export default function App() {
                     <div className="saved-card-salary">{job.salary}</div>
                     <div className="saved-card-meta">
                       <span><MapPinIcon /> {job.location}</span>
-                      {job.remote && <span>🏠 Remote</span>}
+                      {job.remote && <span>🏠 Làm việc từ xa</span>}
                     </div>
                   </div>
                 ))}
