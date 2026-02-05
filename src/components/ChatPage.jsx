@@ -1,39 +1,39 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 
 const chatPrompts = [
-  'Ask me to rewrite a bullet.',
-  'Share the role you are targeting.',
-  'Need a tighter summary?'
+  'Hãy nhờ tôi viết lại một gạch đầu dòng.',
+  'Chia sẻ vai trò bạn đang nhắm tới.',
+  'Bạn cần tóm tắt gọn hơn?'
 ]
 
 const resumePersonas = [
-  { label: 'Professional', value: 'professional' },
-  { label: 'Bold & Confident', value: 'bold' },
-  { label: 'Minimalist', value: 'minimalist' },
-  { label: 'Narrative/Story-driven', value: 'narrative' }
+  { label: 'Chuyên nghiệp', value: 'professional' },
+  { label: 'Táo bạo & tự tin', value: 'bold' },
+  { label: 'Tối giản', value: 'minimalist' },
+  { label: 'Kể chuyện', value: 'narrative' }
 ]
 
 const generateChatResponse = (prompt, persona) => {
   const lower = prompt.toLowerCase()
-  if (lower.includes('rewrite') || lower.includes('bullet')) {
-    return 'Try: "Led a cross-functional redesign that lifted activation by 26% and reduced onboarding time by 18%."'
+  if (lower.includes('rewrite') || lower.includes('bullet') || lower.includes('viết lại') || lower.includes('gạch')) {
+    return 'Thử: "Dẫn dắt thiết kế lại đa chức năng giúp tăng activation 26% và giảm thời gian onboarding 18%."'
   }
-  if (lower.includes('summary') || lower.includes('profile')) {
-    return 'Summary idea: "Product designer focused on growth and onboarding flows, delivering measurable lifts in activation and retention."'
+  if (lower.includes('summary') || lower.includes('profile') || lower.includes('tóm tắt') || lower.includes('hồ sơ')) {
+    return 'Gợi ý tóm tắt: "Nhà thiết kế sản phẩm tập trung tăng trưởng và onboarding, tạo cải thiện đo lường ở activation và retention."'
   }
-  if (lower.includes('skills')) {
-    return 'Group skills by category: "Product Design, Research, Systems" to improve scanability.'
+  if (lower.includes('skills') || lower.includes('kỹ năng')) {
+    return 'Nhóm kỹ năng theo danh mục: "Thiết kế sản phẩm, Nghiên cứu, Hệ thống" để dễ quét hơn.'
   }
   if (persona === 'bold') {
-    return 'Own your impact: "I drove a 26% activation lift by reimagining the onboarding flow."'
+    return 'Khẳng định tác động: "Tôi nâng activation 26% bằng cách tái thiết kế luồng onboarding."'
   }
   if (persona === 'minimalist') {
-    return 'Keep it tight: "Redesigned onboarding, +26% activation."'
+    return 'Giữ thật gọn: "Thiết kế lại onboarding, +26% activation."'
   }
   if (persona === 'narrative') {
-    return 'Tell the story: "I noticed drop-offs in onboarding, then rebuilt the flow to lift activation by 26%."'
+    return 'Kể câu chuyện: "Tôi thấy rơi rụng ở onboarding, rồi làm lại luồng để nâng activation 26%."'
   }
-  return 'Tell me the role you want and I will tailor your headline and bullet points.'
+  return 'Cho tôi biết vai trò bạn muốn, tôi sẽ chỉnh headline và gạch đầu dòng.'
 }
 
 // Icons
@@ -49,7 +49,7 @@ export default function ChatPage() {
   const [chatLog, setChatLog] = useState([
     {
       role: 'ai',
-      text: "Share what role you're targeting and I'll help rewrite bullet points with stronger impact."
+      text: 'Chia sẻ vai trò bạn đang nhắm tới, tôi sẽ giúp viết lại các gạch đầu dòng ấn tượng hơn.'
     }
   ])
   const [chatPersona, setChatPersona] = useState('professional')
@@ -85,10 +85,10 @@ export default function ChatPage() {
 
   const chatSuggestions = useMemo(() => {
     const lower = chatInput.toLowerCase()
-    if (lower.includes('summary')) return ['Strengthen summary', 'Professional headline', 'Narrative hook']
-    if (lower.includes('skills')) return ['ATS-friendly version', 'Improve skills', 'Trim list']
-    if (lower.includes('bullet')) return ['Rewrite bullet', 'Add metrics', 'Use stronger verbs']
-    return ['Rewrite bullet', 'Strengthen summary', 'ATS-friendly version', 'Improve skills']
+    if (lower.includes('summary') || lower.includes('tóm tắt')) return ['Tăng sức mạnh tóm tắt', 'Headline chuyên nghiệp', 'Móc kể chuyện']
+    if (lower.includes('skills') || lower.includes('kỹ năng')) return ['Phiên bản tối ưu ATS', 'Cải thiện kỹ năng', 'Rút gọn danh sách']
+    if (lower.includes('bullet') || lower.includes('gạch')) return ['Viết lại gạch đầu dòng', 'Thêm số liệu', 'Dùng động từ mạnh']
+    return ['Viết lại gạch đầu dòng', 'Tăng sức mạnh tóm tắt', 'Phiên bản tối ưu ATS', 'Cải thiện kỹ năng']
   }, [chatInput])
 
   const currentPrompt = chatPrompts[Math.floor(Date.now() / 5000) % chatPrompts.length]
@@ -96,19 +96,19 @@ export default function ChatPage() {
   return (
     <div className="chat-view">
       <div className="chat-header-section">
-        <h2 className="chat-page-title">Chat Assistant</h2>
-        <p className="chat-page-subtitle">Talk to a resume strategist and get fast improvements</p>
+        <h2 className="chat-page-title">Trợ lý trò chuyện</h2>
+        <p className="chat-page-subtitle">Trao đổi với chuyên gia CV để cải thiện nhanh</p>
       </div>
 
       <div className="chat-container">
         <div className="chat-card">
           <div className="chat-card-header">
             <div>
-              <div className="chat-card-title">Fix-it Chat</div>
+              <div className="chat-card-title">Trò chuyện chỉnh sửa</div>
               <div className="chat-sub">{currentPrompt}</div>
             </div>
             <div className="persona-select">
-              <span className="persona-label">Persona</span>
+              <span className="persona-label">Phong cách</span>
               <select value={chatPersona} onChange={(e) => setChatPersona(e.target.value)}>
                 {resumePersonas.map((persona) => (
                   <option key={persona.value} value={persona.value}>
@@ -138,7 +138,7 @@ export default function ChatPage() {
             ))}
             {isThinking && (
               <div className="chat-bubble chat-ai">
-                <span className="chat-text">Thinking</span>
+                <span className="chat-text">Đang suy nghĩ</span>
                 <span className="dot-loader">
                   <span></span>
                   <span></span>
@@ -156,7 +156,7 @@ export default function ChatPage() {
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask for a rewrite or new section..."
+              placeholder="Hãy hỏi để viết lại hoặc bổ sung mục mới..."
             />
             <button className="send-button" onClick={handleSend} disabled={!chatInput.trim()}>
               <SendIcon />

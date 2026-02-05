@@ -3,79 +3,79 @@ import { useState } from 'react'
 const advisors = [
   {
     name: 'Steve Jobs',
-    title: 'Product Visionary',
-    style: 'Focus on clarity, simplicity, and storytelling.',
-    headline: 'Design your career like a product launch.',
-    summary: 'Obsess over the experience you create for users. Remove everything that is not essential. Build a career narrative that people can feel.',
+    title: 'Nhà tiên phong sản phẩm',
+    style: 'Tập trung vào sự rõ ràng, đơn giản và kể chuyện.',
+    headline: 'Thiết kế sự nghiệp như một màn ra mắt sản phẩm.',
+    summary: 'Ám ảnh với trải nghiệm bạn tạo cho người dùng. Loại bỏ mọi thứ không thiết yếu. Xây dựng câu chuyện sự nghiệp khiến người khác cảm nhận được.',
     focus: [
-      'Craft a portfolio that tells one clear story.',
-      'Prioritize roles that allow deep craftsmanship.',
-      'Say no to distractions so you can ship legendary work.'
+      'Tạo portfolio kể một câu chuyện rõ ràng.',
+      'Ưu tiên vai trò cho phép tay nghề đi sâu.',
+      'Nói không với xao nhãng để tạo ra tác phẩm đỉnh cao.'
     ],
     voice: [
-      'Challenging but inspiring.',
-      'Encourages bold bets and taste-driven decisions.',
-      'Pushes for simplicity, not compromise.'
+      'Thách thức nhưng truyền cảm hứng.',
+      'Khuyến khích đặt cược táo bạo và quyết định theo gu.',
+      'Đẩy sự đơn giản, không thỏa hiệp.'
     ],
     accent: '#FFE9E6',
-    quote: '"Stay hungry. Stay foolish."',
-    badge: 'Simplicity Wizard',
+    quote: '"Hãy khao khát. Hãy dại khờ."',
+    badge: 'Bậc thầy tối giản',
     image: '/image/steve-jobs.jpg'
   },
   {
     name: 'Warren Buffett',
-    title: 'Long-Term Strategist',
-    style: 'Build compounding value through patience and trust.',
-    headline: 'Invest in yourself before any role.',
-    summary: 'Choose companies with durable cultures and leaders who respect craft. Focus on steady growth, not short-term hype.',
+    title: 'Chiến lược gia dài hạn',
+    style: 'Tạo giá trị cộng dồn bằng kiên nhẫn và niềm tin.',
+    headline: 'Đầu tư vào bản thân trước mọi vai trò.',
+    summary: 'Chọn công ty có văn hóa bền vững và lãnh đạo tôn trọng tay nghề. Tập trung tăng trưởng ổn định, không chạy theo hào nhoáng.',
     focus: [
-      'Deepen your fundamentals and communication skills.',
-      'Select mentors with integrity and long-term vision.',
-      'Make career moves that compound relationships.'
+      'Đào sâu nền tảng và kỹ năng giao tiếp.',
+      'Chọn người hướng dẫn chính trực, tầm nhìn dài hạn.',
+      'Ra quyết định nghề nghiệp giúp cộng dồn quan hệ.'
     ],
     voice: [
-      'Calm, measured, and practical.',
-      'Values consistency over flash.',
-      'Encourages reputation-building.'
+      'Điềm tĩnh, chừng mực và thực tế.',
+      'Đề cao sự ổn định hơn hào nhoáng.',
+      'Khuyến khích xây dựng danh tiếng.'
     ],
     accent: '#FFF8DA',
-    quote: '"The best investment you can make is in yourself."',
-    badge: 'Long-Game Mastermind',
+    quote: '"Khoản đầu tư tốt nhất là đầu tư vào bản thân."',
+    badge: 'Bậc thầy đường dài',
     image: '/image/warren-buffet.jpg'
   },
   {
     name: 'Elon Musk',
-    title: 'First-Principles Builder',
-    style: 'Ambitious, technical, and mission-obsessed.',
-    headline: 'Pick the hardest problems and move faster.',
-    summary: 'If the mission energizes you, obsess over the fundamentals and iterate relentlessly. Speed and curiosity beat credentials.',
+    title: 'Nhà xây dựng nguyên lý gốc',
+    style: 'Tham vọng, kỹ thuật và ám ảnh sứ mệnh.',
+    headline: 'Chọn bài toán khó nhất và đi thật nhanh.',
+    summary: 'Nếu sứ mệnh khiến bạn hứng khởi, hãy bám chặt nền tảng và lặp lại không ngừng. Tốc độ và tò mò vượt qua bằng cấp.',
     focus: [
-      'Build proof-of-work that shows technical depth.',
-      'Seek teams shipping ambitious products quickly.',
-      'Learn first principles so you can simplify complexity.'
+      'Tạo minh chứng năng lực cho thấy chiều sâu kỹ thuật.',
+      'Tìm đội ngũ ra sản phẩm tham vọng nhanh chóng.',
+      'Học nguyên lý gốc để đơn giản hóa phức tạp.'
     ],
     voice: [
-      'Urgent and direct.',
-      'Values experimentation and rapid iteration.',
-      'Encourages audacious goals.'
+      'Khẩn trương và thẳng thắn.',
+      'Đề cao thử nghiệm và lặp lại nhanh.',
+      'Khuyến khích mục tiêu táo bạo.'
     ],
     accent: '#E9FAF7',
-    quote: '"Reason from first principles, then move fast."',
-    badge: 'First-Principles Hacker',
+    quote: '"Lập luận từ nguyên lý gốc, rồi đi thật nhanh."',
+    badge: 'Hacker nguyên lý gốc',
     image: '/image/elon-musk.jpg'
   }
 ]
 
 const advisorReplies = {
-  'steve jobs': 'Keep the story singular. Strip it down to the moment you changed the trajectory of a product.',
-  'warren buffett': 'Aim for steady compounding—show consistency in your metrics, not just peaks.',
-  'elon musk': 'Start from first principles. What is the simplest proof of impact you can show?'
+  'steve jobs': 'Giữ câu chuyện nhất quán. Chắt lọc về khoảnh khắc bạn đổi hướng sản phẩm.',
+  'warren buffett': 'Nhắm vào tăng trưởng bền vững—thể hiện sự đều đặn trong số liệu, không chỉ đỉnh cao.',
+  'elon musk': 'Bắt đầu từ nguyên lý gốc. Bằng chứng tác động đơn giản nhất bạn có thể đưa ra là gì?'
 }
 
 const getAdvisorReply = (advisorName, prompt) => {
   const lower = advisorName.toLowerCase()
-  const base = advisorReplies[lower] || 'Tell me what outcome you want to drive, and we will reverse engineer the story.'
-  return `${base} Now, refine your question: ${prompt}`
+  const base = advisorReplies[lower] || 'Hãy nói mục tiêu bạn muốn đạt, rồi chúng ta sẽ đảo ngược câu chuyện.'
+  return `${base} Bây giờ, hãy làm rõ câu hỏi: ${prompt}`
 }
 
 export default function AdvisorPage() {
@@ -100,8 +100,8 @@ export default function AdvisorPage() {
   return (
     <div className="advisor-view">
       <div className="advisor-header">
-        <h2 className="advisor-page-title">Career Advice Lounge</h2>
-        <p className="advisor-page-subtitle">LLM-styled mentorship inspired by legendary leaders</p>
+        <h2 className="advisor-page-title">Phòng tư vấn sự nghiệp</h2>
+        <p className="advisor-page-subtitle">Cố vấn theo phong cách LLM, lấy cảm hứng từ các lãnh đạo huyền thoại</p>
       </div>
 
       <div className="advisor-row">
@@ -124,19 +124,19 @@ export default function AdvisorPage() {
         ))}
       </div>
 
-      <div className="advisor-detail">
+        <div className="advisor-detail">
         <div className="advisor-headline">{advisor.headline}</div>
         <p className="advisor-summary">{advisor.summary}</p>
 
         <div className="detail-columns">
           <div className="detail-card">
-            <div className="detail-title">Actionable Focus</div>
+            <div className="detail-title">Trọng tâm hành động</div>
             {advisor.focus.map((item) => (
               <div key={item} className="detail-bullet">• {item}</div>
             ))}
           </div>
           <div className="detail-card">
-            <div className="detail-title">Signature Tone</div>
+            <div className="detail-title">Giọng điệu đặc trưng</div>
             {advisor.voice.map((item) => (
               <div key={item} className="detail-bullet">• {item}</div>
             ))}
@@ -145,28 +145,28 @@ export default function AdvisorPage() {
 
         <div className={`advisor-panel ${advisorPanelOpen ? 'open' : ''}`}>
           <div className="advisor-panel-header">
-            <span>Ask {advisor.name.split(' ')[0]}</span>
+            <span>Hỏi {advisor.name.split(' ')[0]}</span>
             <button className="panel-toggle" onClick={() => setAdvisorPanelOpen((prev) => !prev)}>
-              {advisorPanelOpen ? 'Hide' : 'Ask'}
+              {advisorPanelOpen ? 'Ẩn' : 'Hỏi'}
             </button>
           </div>
           <div className="advisor-panel-body">
             <input
               type="text"
               className="advisor-input"
-              placeholder={`${advisor.name.split(' ')[0]}, how can I improve storytelling in my CV?`}
+              placeholder={`${advisor.name.split(' ')[0]}, làm sao để kể chuyện tốt hơn trong CV?`}
               value={advisorQuestion}
               onChange={(e) => setAdvisorQuestion(e.target.value)}
               onKeyDown={handleKeyDown}
             />
             <button className="primary-button" onClick={handleAdvisorAsk}>
-              Send question
+              Gửi câu hỏi
             </button>
             {advisorResponse && <p className="advisor-response">{advisorResponse}</p>}
           </div>
         </div>
 
-        <p className="disclaimer">Advice is generated for inspiration and does not represent real-world endorsements.</p>
+        <p className="disclaimer">Lời khuyên được tạo để tham khảo, không đại diện cho xác nhận thực tế.</p>
       </div>
     </div>
   )

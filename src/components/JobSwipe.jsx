@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { useJobs } from '../hooks/useJobs'
 
 // SVG Icons
@@ -32,11 +32,25 @@ export default function JobSwipe({ onSwipeLeft, onSwipeRight, onViewDetails }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [deltaX, setDeltaX] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
+  const [showDetails, setShowDetails] = useState(false)
   
   const startX = useRef(0)
+  const scrollRef = useRef(null)
   const threshold = 100
 
   const currentJob = jobs[currentIndex]
+  const requirements = Array.isArray(currentJob?.requirements)
+    ? currentJob.requirements
+    : currentJob?.requirements
+      ? [currentJob.requirements]
+      : []
+
+  useEffect(() => {
+    setShowDetails(false)
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0
+    }
+  }, [currentJob?.id])
 
   const handleStart = useCallback((clientX) => {
     setIsDragging(true)
@@ -85,6 +99,17 @@ export default function JobSwipe({ onSwipeLeft, onSwipeRight, onViewDetails }) {
     setCurrentIndex((prev) => (prev + 1) % jobs.length)
   }
 
+  const handleScroll = (event) => {
+    const scrollTop = event.currentTarget.scrollTop
+    setShowDetails(scrollTop > 60)
+  }
+
+  const handleShowDetails = () => {
+    if (!scrollRef.current) return
+    scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
+    setShowDetails(true)
+  }
+
   const rotation = deltaX / 20
   const swipeDirection = deltaX > 50 ? 'right' : deltaX < -50 ? 'left' : null
 
@@ -96,8 +121,8 @@ export default function JobSwipe({ onSwipeLeft, onSwipeRight, onViewDetails }) {
   if (loading) {
     return (
       <div className="empty-state">
-        <div className="empty-state-title">Loading jobs...</div>
-        <div className="empty-state-text">Fetching from {source || 'database'}</div>
+        <div className="empty-state-title">Đang tải việc làm...</div>
+        <div className="empty-state-text">Đang lấy từ {source || 'cơ sở dữ liệu'}</div>
       </div>
     )
   }
@@ -106,8 +131,8 @@ export default function JobSwipe({ onSwipeLeft, onSwipeRight, onViewDetails }) {
     return (
       <div className="empty-state">
         <HeartIcon />
-        <div className="empty-state-title">No more jobs!</div>
-        <div className="empty-state-text">Check back later for new opportunities</div>
+        <div className="empty-state-title">Hết việc để xem!</div>
+        <div className="empty-state-text">Quay lại sau để xem cơ hội mới</div>
       </div>
     )
   }
@@ -148,34 +173,75 @@ export default function JobSwipe({ onSwipeLeft, onSwipeRight, onViewDetails }) {
 
             {/* Swipe indicators */}
             {swipeDirection === 'right' && (
-              <div className="swipe-indicator save">SAVE</div>
+              <div className="swipe-indicator save">LƯU</div>
             )}
             {swipeDirection === 'left' && (
-              <div className="swipe-indicator pass">PASS</div>
+              <div className="swipe-indicator pass">BỎ QUA</div>
             )}
 
             <div className="job-card-content">
-              <div className="job-badges">
-                <span className="job-badge salary">{currentJob.salary}</span>
-                {currentJob.remote && <span className="job-badge remote">Remote</span>}
-                <span className="job-badge">{currentJob.type}</span>
-              </div>
+              <div className="job-card-scroll" onScroll={handleScroll} ref={scrollRef}>
+                <div className="job-card-summary">
+                  <div className="job-badges">
+                    <span className="job-badge salary">{currentJob.salary}</span>
+                    {currentJob.remote && <span className="job-badge remote">Làm việc từ xa</span>}
+                    <span className="job-badge">{currentJob.type}</span>
+                  </div>
 
-              <h2 className="job-card-title">{currentJob.title}</h2>
-              <div className="job-card-company">{currentJob.company}</div>
-              <div className="job-card-location">📍 {currentJob.location}</div>
+                  <h2 className="job-card-title">{currentJob.title}</h2>
+                  <div className="job-card-company">{currentJob.company}</div>
+                  <div className="job-card-location">📍 {currentJob.location}</div>
 
-              <p className="job-card-description">{currentJob.description}</p>
+                  <p className="job-card-description">{currentJob.description}</p>
 
-              <div className="job-requirements">
-                {currentJob.requirements.map((req, i) => (
-                  <span key={i} className="requirement-tag">{req}</span>
-                ))}
-              </div>
+                  {requirements.length > 0 && (
+                    <div className="job-requirements">
+                      {requirements.map((req, i) => (
+                        <span key={`${req}-${i}`} className="requirement-tag">{req}</span>
+                      ))}
+                    </div>
+                  )}
 
-              <div className="swipe-hint">
-                <ChevronDownIcon />
-                <span>Swipe to decide</span>
+                  <div className="swipe-hint">
+                    <ChevronDownIcon />
+                    <span>Kéo xuống để xem chi tiết</span>
+                  </div>
+                </div>
+
+                <div className={`job-card-details ${showDetails ? 'visible' : ''}`}>
+                  <div className="detail-title">Chi tiết công việc</div>
+                  <div className="detail-section">
+                    <div className="detail-label">Mô tả</div>
+                    <p className="detail-text">{currentJob.description || 'Chưa có mô tả chi tiết.'}</p>
+                  </div>
+                  <div className="detail-section">
+                    <div className="detail-label">Yêu cầu</div>
+                    {requirements.length > 0 ? (
+                      <ul className="detail-list">
+                        {requirements.map((req, i) => (
+                          <li key={`${req}-detail-${i}`}>{req}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="detail-text">Chưa cập nhật yêu cầu.</p>
+                    )}
+                  </div>
+                  <div className="detail-section detail-meta">
+                    <div>
+                      <div className="detail-label">Nguồn</div>
+                      <div className="detail-chip">{currentJob.source || 'Nội bộ'}</div>
+                    </div>
+                    <div>
+                      <div className="detail-label">Hình thức</div>
+                      <div className="detail-chip">{currentJob.type}</div>
+                    </div>
+                  </div>
+                  {currentJob.url && (
+                    <a className="detail-link" href={currentJob.url} target="_blank" rel="noreferrer">
+                      Xem tin tuyển dụng
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -194,7 +260,7 @@ export default function JobSwipe({ onSwipeLeft, onSwipeRight, onViewDetails }) {
         
         <button
           className="action-btn info"
-          onClick={() => onViewDetails?.(currentJob)}
+          onClick={handleShowDetails}
           disabled={!currentJob}
         >
           <InfoIcon />
