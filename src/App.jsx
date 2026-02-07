@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react'
 import JobSwipe from './components/JobSwipe'
-import AdvisorPage from './components/AdvisorPage'
-import CVFixerPage from './components/CVFixerPage'
-import ChatPage from './components/ChatPage'
+import FeedPage from './components/FeedPage'
+import LearningHubPage from './components/LearningHubPage'
+import AdvisorProfilePage from './components/AdvisorProfilePage'
+import ProfilePage from './components/ProfilePage'
 
 // SVG Icons
 const BriefcaseIcon = () => (
@@ -31,19 +32,19 @@ const SparklesIcon = () => (
   </svg>
 )
 
-const FileTextIcon = () => (
+const BookIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
-    <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
-    <path d="M10 9H8"/>
-    <path d="M16 13H8"/>
-    <path d="M16 17H8"/>
+    <path d="M12 7v14"/>
+    <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h13a4 4 0 0 1 4 4v14a1 1 0 0 1-1 1H4a2 2 0 0 0-2 2"/>
+    <path d="M8 3v4"/>
   </svg>
 )
 
-const MessageIcon = () => (
+const LayoutIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+    <rect width="18" height="18" x="3" y="3" rx="2"/>
+    <path d="M3 9h18"/>
+    <path d="M9 21V9"/>
   </svg>
 )
 
@@ -86,9 +87,9 @@ export default function App() {
   const navItems = [
     { id: 'swipe', icon: BriefcaseIcon, label: 'Vuốt' },
     { id: 'matched', icon: () => <HeartIcon filled={false} />, label: 'Đã lưu', badge: savedJobs.length },
+    { id: 'feed', icon: LayoutIcon, label: 'Feed' },
+    { id: 'learning', icon: BookIcon, label: 'Học tập' },
     { id: 'advisor', icon: SparklesIcon, label: 'Cố vấn' },
-    { id: 'cv', icon: FileTextIcon, label: 'Hồ sơ' },
-    { id: 'chat', icon: MessageIcon, label: 'Trò chuyện' },
   ]
 
   return (
@@ -172,11 +173,13 @@ export default function App() {
           </div>
         )}
 
-        {activeView === 'advisor' && <AdvisorPage />}
+        {activeView === 'feed' && <FeedPage />}
 
-        {activeView === 'cv' && <CVFixerPage />}
+        {activeView === 'learning' && <LearningHubPage />}
 
-        {activeView === 'chat' && <ChatPage />}
+        {activeView === 'advisor' && <AdvisorProfilePage />}
+
+        {activeView === 'profile' && <ProfilePage />}
       </main>
 
       {/* Bottom Navigation */}
