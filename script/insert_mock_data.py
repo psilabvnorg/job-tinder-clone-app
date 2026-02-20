@@ -1,14 +1,21 @@
 """
+python insert_mock_data.py --truncate  
+---
 Insert mock data (instructors, stories, posts, companies, practice_questions) into SQLite
 
 Usage:
-  python insert_mock_data.py                    # Use default mock_data_template.json
-  python insert_mock_data.py <json_file>        # Use custom JSON file
+  python insert_mock_data.py                           # Use default JSON, no truncate
+  python insert_mock_data.py <json_file>               # Use custom JSON file
+  python insert_mock_data.py --truncate                # Truncate tables before insert
+  python insert_mock_data.py <json_file> --truncate    # Custom JSON + truncate
 
 Examples:
   python insert_mock_data.py
   python insert_mock_data.py my_generated_data.json
+  python insert_mock_data.py --truncate
+  python insert_mock_data.py my_generated_data.json --truncate
 """
+import argparse
 import json
 import sqlite3
 import sys
@@ -18,6 +25,20 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).parent
 DEFAULT_JSON = SCRIPT_DIR / "mock_data_template.json"
 DB_FILE = SCRIPT_DIR.parent / "public" / "data" / "jobs.db"
+
+TABLES_TO_TRUNCATE = ['instructors', 'stories', 'companies', 'posts', 'practice_questions']
+
+
+def truncate_tables(conn):
+    """Delete all data from tables"""
+    print("[DB] Truncating tables...")
+    for table in TABLES_TO_TRUNCATE:
+        try:
+            conn.execute(f'DELETE FROM {table}')
+            print(f"  - Truncated: {table}")
+        except Exception as e:
+            print(f"  - Skip {table}: {e}")
+    conn.commit()
 
 
 def create_tables(conn):
@@ -221,7 +242,12 @@ def insert_practice_questions(conn, questions):
 
 
 def main():
-    json_file = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_JSON
+    parser = argparse.ArgumentParser(description='Insert mock data into SQLite database')
+    parser.add_argument('json_file', nargs='?', default=None, help='JSON file with mock data')
+    parser.add_argument('--truncate', '-t', action='store_true', help='Truncate tables before inserting')
+    args = parser.parse_args()
+    
+    json_file = Path(args.json_file) if args.json_file else DEFAULT_JSON
     
     if not json_file.exists():
         print(f"[ERROR] File not found: {json_file}")
@@ -236,6 +262,9 @@ def main():
     conn = sqlite3.connect(DB_FILE)
     
     create_tables(conn)
+    
+    if args.truncate:
+        truncate_tables(conn)
     
     results = {}
     

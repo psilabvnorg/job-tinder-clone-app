@@ -13,7 +13,39 @@
       "name": "Warren Buffett",
       "username": "warren.finance",
       "avatar": "/image/instructors/warren-buffett.jpg",
-      "category": "Finance",
+      "category": "Tài chính",
+      "verified": true
+    },
+    {
+      "id": 3,
+      "name": "Alex Design",
+      "username": "alex.design",
+      "avatar": "/image/instructors/alex-design.jpg",
+      "category": "Thiết kế",
+      "verified": true
+    },
+    {
+      "id": 4,
+      "name": "David MBA",
+      "username": "david.mba",
+      "avatar": "/image/instructors/david-mba.jpg",
+      "category": "MBA",
+      "verified": true
+    },
+    {
+      "id": 5,
+      "name": "Sarah Chen",
+      "username": "sarah.leadership",
+      "avatar": "/image/instructors/sarah-chen.jpg",
+      "category": "Lãnh đạo",
+      "verified": true
+    },
+    {
+      "id": 6,
+      "name": "Simon Sinek",
+      "username": "simon.leadership",
+      "avatar": "/image/instructors/simon-sinek.jpg",
+      "category": "Lãnh đạo",
       "verified": true
     }
   ],
@@ -31,6 +63,34 @@
       "user_username": "warren.finance",
       "image": "/image/instructors/warren-buffett.jpg",
       "has_unseen": true
+    },
+    {
+      "id": 3,
+      "user_name": "Alex Design",
+      "user_username": "alex.design",
+      "image": "/image/instructors/alex-design.jpg",
+      "has_unseen": true
+    },
+    {
+      "id": 4,
+      "user_name": "David MBA",
+      "user_username": "david.mba",
+      "image": "/image/instructors/david-mba.jpg",
+      "has_unseen": false
+    },
+    {
+      "id": 5,
+      "user_name": "Sarah Chen",
+      "user_username": "sarah.leadership",
+      "image": "/image/instructors/sarah-chen.jpg",
+      "has_unseen": true
+    },
+    {
+      "id": 6,
+      "user_name": "Simon Sinek",
+      "user_username": "simon.leadership",
+      "image": "/image/instructors/simon-sinek.jpg",
+      "has_unseen": false
     }
   ],
   "companies": [
@@ -38,7 +98,7 @@
       "id": "company-1",
       "name": "TechViet Solutions",
       "logo": "/image/steve-jobs.jpg",
-      "industry": "Technology",
+      "industry": "Công nghệ",
       "size": "100-500",
       "location": "Hà Nội"
     },
@@ -46,7 +106,7 @@
       "id": "company-2",
       "name": "VinaTech Group",
       "logo": "/image/warren-buffet.jpg",
-      "industry": "Software Development",
+      "industry": "Phát triển phần mềm",
       "size": "500-1000",
       "location": "Hồ Chí Minh"
     }
@@ -55,69 +115,145 @@
     {
       "id": 1,
       "author_id": 1,
-      "time": "3 hours ago",
-      "content": "Marketing isn't about selling. It's about connecting.\n\nThe best products don't need aggressive sales tactics. They solve real problems for real people.",
+      "time": "3 giờ trước",
+      "content": "Marketing không phải là bán hàng. Đó là sự kết nối.\n\nNhững sản phẩm tốt nhất không cần chiến thuật bán hàng hung hãn. Chúng giải quyết vấn đề thật cho con người thật.",
       "image": "/image/posts/focus-study.jpg",
       "tags": ["marketing", "designthinking", "innovation"],
       "likes": 45200,
       "comments": 36,
       "category": "Marketing",
-      "quiz_question": "Which line best reflects the idea in this post?",
+      "quiz_question": "Câu nào phản ánh đúng ý của bài viết?",
       "quiz_options": [
-        {"id": "a", "label": "A", "text": "Marketing is about persuasion through discounts."},
-        {"id": "b", "label": "B", "text": "Marketing starts with solving a real customer pain."},
-        {"id": "c", "label": "C", "text": "Marketing works only with large budgets."}
+        {"id": "a", "label": "A", "text": "Marketing là thuyết phục bằng ưu đãi giảm giá."},
+        {"id": "b", "label": "B", "text": "Marketing bắt đầu bằng việc giải quyết nỗi đau của khách hàng."},
+        {"id": "c", "label": "C", "text": "Marketing chỉ hiệu quả khi có ngân sách lớn."}
       ],
       "quiz_correct_id": "b",
-      "quiz_explanation": "The post emphasizes solving real customer problems before pitching."
+      "quiz_explanation": "Bài viết nhấn mạnh việc giải quyết vấn đề thực sự cho khách hàng trước khi bán."
     },
     {
       "id": 2,
       "author_id": 2,
-      "time": "5 hours ago",
-      "content": "Rule #1: Never lose money.\nRule #2: Never forget Rule #1.\n\nCompounding is the 8th wonder of the world.",
+      "time": "5 giờ trước",
+      "content": "Quy tắc số 1: Đừng để mất tiền.\nQuy tắc số 2: Đừng quên Quy tắc số 1.\n\nLãi kép là kỳ quan thứ 8 của thế giới.",
       "image": "/image/topics/finance.jpg",
       "tags": ["investing", "personalfinance", "wealth"],
       "likes": 67800,
       "comments": 74,
-      "category": "Finance",
-      "quiz_question": "What makes compounding powerful?",
+      "category": "Tài chính",
+      "quiz_question": "Điều gì khiến lãi kép trở nên mạnh mẽ?",
       "quiz_options": [
-        {"id": "a", "label": "A", "text": "Starting early and staying consistent."},
-        {"id": "b", "label": "B", "text": "Timing the market weekly."},
-        {"id": "c", "label": "C", "text": "Investing only in high-risk assets."}
+        {"id": "a", "label": "A", "text": "Bắt đầu sớm và duy trì đều đặn."},
+        {"id": "b", "label": "B", "text": "Canh thị trường hàng tuần."},
+        {"id": "c", "label": "C", "text": "Đầu tư chỉ vào tài sản rủi ro cao."}
       ],
       "quiz_correct_id": "a",
-      "quiz_explanation": "Consistent contributions over time let compound growth do the heavy lifting."
+      "quiz_explanation": "Những khoản đầu tư đều đặn theo thời gian giúp lãi kép phát huy sức mạnh."
+    },
+    {
+      "id": 3,
+      "author_id": 3,
+      "time": "2 giờ trước",
+      "content": "Thiết kế tốt là thiết kế vô hình. Khi người dùng không nhận ra giao diện, đó là lúc bạn đã thành công.\n\nUX tốt nhất là loại bỏ ma sát, không phải thêm tính năng.",
+      "image": "/image/practice/design-invisible.jpg",
+      "tags": ["design", "ux", "userexperience"],
+      "likes": 32100,
+      "comments": 28,
+      "category": "Thiết kế",
+      "quiz_question": "Câu nào phản ánh đúng ý của bài viết?",
+      "quiz_options": [
+        {"id": "a", "label": "A", "text": "Thiết kế tốt phải thật nổi bật và dễ nhận thấy."},
+        {"id": "b", "label": "B", "text": "Thiết kế tốt nên tránh làm cản trở người dùng."},
+        {"id": "c", "label": "C", "text": "Thêm nhiều tính năng luôn tốt hơn."}
+      ],
+      "quiz_correct_id": "b",
+      "quiz_explanation": "Thiết kế tốt là khi người dùng đạt mục tiêu mà không cảm thấy bị cản trở."
+    },
+    {
+      "id": 4,
+      "author_id": 4,
+      "time": "4 giờ trước",
+      "content": "MBA không chỉ là một tấm bằng. Đó là cách học tư duy chiến lược.\n\nNhững nhà lãnh đạo giỏi nhìn ra các mô hình mà người khác bỏ lỡ và hành động quyết đoán.",
+      "image": "/image/topics/mba.jpg",
+      "tags": ["mba", "business", "strategy"],
+      "likes": 28500,
+      "comments": 42,
+      "category": "MBA",
+      "quiz_question": "Câu nào phản ánh đúng ý của bài viết?",
+      "quiz_options": [
+        {"id": "a", "label": "A", "text": "MBA đảm bảo thành công trong kinh doanh."},
+        {"id": "b", "label": "B", "text": "Tư duy chiến lược quan trọng hơn tấm bằng."},
+        {"id": "c", "label": "C", "text": "Chỉ những người có MBA mới lãnh đạo được doanh nghiệp."}
+      ],
+      "quiz_correct_id": "b",
+      "quiz_explanation": "Bài viết nhấn mạnh tầm quan trọng của tư duy chiến lược."
+    },
+    {
+      "id": 5,
+      "author_id": 5,
+      "time": "6 giờ trước",
+      "content": "Lãnh đạo không phải là đứng đầu. Đó là chăm sóc những người bạn dẫn dắt.\n\nNhững nhà lãnh đạo giỏi tạo ra thêm nhiều lãnh đạo, không phải thêm người theo.",
+      "image": "/image/topics/leadership.jpg",
+      "tags": ["leadership", "management", "growth"],
+      "likes": 51300,
+      "comments": 56,
+      "category": "Lãnh đạo",
+      "quiz_question": "Câu nào phản ánh đúng ý của bài viết?",
+      "quiz_options": [
+        {"id": "a", "label": "A", "text": "Lãnh đạo nên tập trung vào quyền lực."},
+        {"id": "b", "label": "B", "text": "Lãnh đạo thực sự là phục vụ và trao quyền cho người khác."},
+        {"id": "c", "label": "C", "text": "Lãnh đạo giỏi là người có nhiều người theo nhất."}
+      ],
+      "quiz_correct_id": "b",
+      "quiz_explanation": "Bài viết nhấn mạnh lãnh đạo phục vụ."
+    },
+    {
+      "id": 6,
+      "author_id": 6,
+      "time": "8 giờ trước",
+      "content": "Con người không mua thứ bạn làm. Họ mua lý do bạn làm nó.\n\nHãy bắt đầu với 'tại sao'. 'Làm thế nào' và 'cái gì' sẽ tự nhiên theo sau.",
+      "image": "/image/posts/community.jpg",
+      "tags": ["leadership", "purpose", "startwithwhy"],
+      "likes": 72400,
+      "comments": 89,
+      "category": "Lãnh đạo",
+      "quiz_question": "Câu nào phản ánh đúng ý của bài viết?",
+      "quiz_options": [
+        {"id": "a", "label": "A", "text": "Tập trung vào tính năng sản phẩm trước."},
+        {"id": "b", "label": "B", "text": "Mục đích và sứ mệnh tạo ra sự kết nối sâu sắc."},
+        {"id": "c", "label": "C", "text": "Giá cả là yếu tố quan trọng nhất."}
+      ],
+      "quiz_correct_id": "b",
+      "quiz_explanation": "Bài viết nhấn mạnh tầm quan trọng của 'lý do'."
     }
   ],
   "practice_questions": [
     {
       "id": "practice-1",
       "topic": "IELTS",
-      "title": "Quick Check · IELTS Speaking",
-      "question": "What is the benefit of the 3-second pause before answering?",
+      "title": "Kiểm tra nhanh · IELTS Speaking",
+      "question": "Lợi ích của việc tạm dừng 3 giây trước khi trả lời là gì?",
       "options": [
-        {"id": "p1-a", "label": "A", "text": "It helps you sound more confident and organized."},
-        {"id": "p1-b", "label": "B", "text": "It makes answers shorter automatically."},
-        {"id": "p1-c", "label": "C", "text": "It guarantees a perfect score."}
+        {"id": "p1-a", "label": "A", "text": "Giúp bạn nghe tự tin và mạch lạc hơn."},
+        {"id": "p1-b", "label": "B", "text": "Khiến câu trả lời tự động ngắn hơn."},
+        {"id": "p1-c", "label": "C", "text": "Đảm bảo bạn đạt điểm tuyệt đối."}
       ],
       "correct_option_id": "p1-a",
-      "explanation": "A short pause reduces filler words and lets you organize your response.",
+      "explanation": "Một khoảng dừng ngắn giúp giảm từ đệm và tổ chức ý tốt hơn.",
       "image": "/image/practice/ielts-speaking.jpg"
     },
     {
       "id": "practice-2",
-      "topic": "Design",
-      "title": "Swipe Practice · UX Basics",
-      "question": "Which principle best matches 'good design is invisible'?",
+      "topic": "Thiết kế",
+      "title": "Swipe Practice · UX Cơ bản",
+      "question": "Nguyên tắc nào phù hợp nhất với 'thiết kế tốt là vô hình'?",
       "options": [
-        {"id": "p2-a", "label": "A", "text": "Focus on user goals before visuals."},
-        {"id": "p2-b", "label": "B", "text": "Add more UI decoration for engagement."},
-        {"id": "p2-c", "label": "C", "text": "Use every feature to show capability."}
+        {"id": "p2-a", "label": "A", "text": "Tập trung vào mục tiêu người dùng trước yếu tố hình ảnh."},
+        {"id": "p2-b", "label": "B", "text": "Thêm nhiều trang trí UI để tăng sự thu hút."},
+        {"id": "p2-c", "label": "C", "text": "Dùng tất cả tính năng để thể hiện khả năng."}
       ],
       "correct_option_id": "p2-a",
-      "explanation": "If users reach their goals effortlessly, the design stays out of the way.",
+      "explanation": "Nếu người dùng đạt mục tiêu dễ dàng, thiết kế đã ở đúng vị trí.",
       "image": "/image/practice/design-invisible.jpg"
     }
   ]

@@ -16,6 +16,8 @@ JobSwipe is a web application that helps users find jobs using a swipe interacti
 | CV Editing | `src/components/CVFixerPage.jsx` | CV improvement tool |
 | Chat | `src/components/ChatPage.jsx` | Chat interface |
 
+---
+database in job-tinder-clone-app\public\data\jobs.db
 
 ```bash
 npm install

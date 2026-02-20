@@ -1,4 +1,3 @@
-C:\Users\tung3436\WORK\000 TESTING\job-tinder-clone-app\script>python view-db.py
 
 ============================================================
 TABLE: jobs
