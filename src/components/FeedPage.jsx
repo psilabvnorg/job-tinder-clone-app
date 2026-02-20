@@ -1,144 +1,302 @@
-const stories = [
-  { id: 1, name: 'Minh', title: 'UI Sprint', tag: 'Hôm nay', active: true },
-  { id: 2, name: 'Ly', title: 'Case Study', tag: '3h trước' },
-  { id: 3, name: 'Khoa', title: 'Prototype', tag: '5h trước' },
-  { id: 4, name: 'Hana', title: 'Portfolio', tag: 'Hôm qua' },
-  { id: 5, name: 'Duy', title: 'Interview', tag: 'Hôm qua' }
-]
+import { useState } from 'react'
+import { stories, instructors, posts as allPosts, categories, categoryEmojis, formatNumber } from '../data/mockJobs'
 
-const posts = [
-  {
-    id: 1,
-    author: 'Linh Nguyen',
-    role: 'Product Designer • Edugram',
-    time: '12 phút trước',
-    avatar: 'LN',
-    content: 'Vừa hoàn thành sprint về onboarding. Đây là flow mới giúp giảm 18% drop-off sau 3 bước đầu.',
-    image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80',
-    tags: ['#Onboarding', '#UXResearch', '#Metrics'],
-    likes: 248,
-    comments: 36,
-    saves: 54
-  },
-  {
-    id: 2,
-    author: 'Edugram Studio',
-    role: 'Creator • Case study series',
-    time: '1 giờ trước',
-    avatar: 'ES',
-    content: 'Bí quyết kể chuyện trong portfolio: mở đầu bằng bối cảnh + mục tiêu, kết thúc bằng kết quả đo lường.',
-    image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80',
-    tags: ['#Portfolio', '#Storytelling'],
-    likes: 412,
-    comments: 74,
-    saves: 96
-  },
-  {
-    id: 3,
-    author: 'Trang Le',
-    role: 'Mentor • Practice track',
-    time: 'Hôm qua',
-    avatar: 'TL',
-    content: 'Bài tập tuần này: tối ưu flow đăng ký. Hãy chia sẻ wireframe của bạn để được feedback.',
-    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80',
-    tags: ['#Practice', '#Community'],
-    likes: 189,
-    comments: 42,
-    saves: 31
-  }
-]
-
-const LikeIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+// Icons
+const HeartIcon = ({ filled }) => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill={filled ? '#ef4444' : 'none'} stroke={filled ? '#ef4444' : 'currentColor'} strokeWidth="2">
     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/>
   </svg>
 )
 
-const MessageIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+const CommentIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/>
   </svg>
 )
 
 const ShareIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="18" cy="5" r="3"/>
-    <circle cx="6" cy="12" r="3"/>
-    <circle cx="18" cy="19" r="3"/>
-    <path d="m8.59 13.51 6.83 3.98"/>
-    <path d="m15.42 6.51-6.83 3.98"/>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>
   </svg>
 )
 
-const BookmarkIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+const BookmarkIcon = ({ filled }) => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill={filled ? '#9333ea' : 'none'} stroke={filled ? '#9333ea' : 'currentColor'} strokeWidth="2">
     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
   </svg>
 )
 
-export default function FeedPage() {
+const MoreIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+  </svg>
+)
+
+const VerifiedIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="#3b82f6">
+    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+  </svg>
+)
+
+const CheckIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+)
+
+const XIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </svg>
+)
+
+const PlusIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+  </svg>
+)
+
+// Stories Component
+function Stories() {
+  const [activeStory, setActiveStory] = useState(null)
+
   return (
-    <div className="feed-view">
-      <div className="feed-header">
-        <div>
-          <h2 className="feed-title">Edugram Feed</h2>
-          <p className="feed-subtitle">Stories, bài đăng và tương tác từ cộng đồng học tập</p>
-        </div>
-        <button className="feed-action">Tạo bài</button>
+    <div className="edu-stories">
+      {/* Add Story Button */}
+      <div className="edu-story-item">
+        <button className="edu-story-add">
+          <PlusIcon />
+        </button>
+        <span className="edu-story-name">Add</span>
       </div>
 
-      <div className="stories-row">
-        {stories.map((story) => (
-          <div key={story.id} className={`story-card ${story.active ? 'active' : ''}`}>
-            <div className="story-avatar">{story.name.charAt(0)}</div>
-            <div className="story-name">{story.name}</div>
-            <div className="story-title">{story.title}</div>
-            <span className="story-tag">{story.tag}</span>
+      {/* Story Items */}
+      {stories.map((story) => (
+        <button
+          key={story.id}
+          onClick={() => setActiveStory(story.id)}
+          className="edu-story-item"
+        >
+          <div className={`edu-story-ring ${story.hasUnseen ? 'unseen' : ''} ${activeStory === story.id ? 'active' : ''}`}>
+            <img src={story.image} alt={story.user.name} className="edu-story-avatar" />
+            {story.hasUnseen && <span className="edu-story-badge" />}
           </div>
-        ))}
+          <span className={`edu-story-name ${story.hasUnseen ? 'unseen' : ''}`}>
+            {story.user.name.split(' ')[0]}
+          </span>
+        </button>
+      ))}
+    </div>
+  )
+}
+
+function Post({ post }) {
+  const [liked, setLiked] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [likes, setLikes] = useState(post.likes)
+  const [selectedQuiz, setSelectedQuiz] = useState(null)
+  const [showComments, setShowComments] = useState(false)
+
+  const handleLike = () => {
+    setLiked(!liked)
+    setLikes(liked ? likes - 1 : likes + 1)
+  }
+
+  return (
+    <article className="edu-post">
+      {/* Header */}
+      <div className="edu-post-header">
+        <div className="edu-post-user">
+          <div className="edu-post-avatar-wrap">
+            <img src={post.author.avatar} alt={post.author.name} className="edu-post-avatar" />
+            <span className="edu-post-online" />
+          </div>
+          <div className="edu-post-user-info">
+            <div className="edu-post-name-row">
+              <span className="edu-post-name">{post.author.name}</span>
+              {post.author.verified && <VerifiedIcon />}
+            </div>
+            <span className="edu-post-username">@{post.author.username}</span>
+          </div>
+        </div>
+        <div className="edu-post-header-right">
+          <span className="edu-post-category">{post.category}</span>
+          <button className="edu-post-more"><MoreIcon /></button>
+        </div>
       </div>
 
-      <div className="post-list">
-        {posts.map((post) => (
-          <article key={post.id} className="post-card">
-            <div className="post-header">
-              <div className="post-avatar">{post.avatar}</div>
-              <div className="post-meta">
-                <div className="post-author">{post.author}</div>
-                <div className="post-role">{post.role}</div>
-              </div>
-              <span className="post-time">{post.time}</span>
-            </div>
-            <p className="post-content">{post.content}</p>
-            <div className="post-tags">
-              {post.tags.map((tag) => (
-                <span key={tag} className="post-tag">{tag}</span>
+      {/* Image */}
+      {post.image && (
+        <div className="edu-post-image">
+          <img src={post.image} alt="Post" />
+        </div>
+      )}
+
+      {/* Content */}
+      <div className="edu-post-content">
+        {/* Actions */}
+        <div className="edu-post-actions">
+          <div className="edu-post-actions-left">
+            <button onClick={handleLike} className={`edu-action-btn ${liked ? 'liked' : ''}`}>
+              <HeartIcon filled={liked} />
+            </button>
+            <button onClick={() => setShowComments(!showComments)} className="edu-action-btn">
+              <CommentIcon />
+            </button>
+            <button className="edu-action-btn"><ShareIcon /></button>
+          </div>
+          <button onClick={() => setSaved(!saved)} className={`edu-action-btn ${saved ? 'saved' : ''}`}>
+            <BookmarkIcon filled={saved} />
+          </button>
+        </div>
+
+        {/* Likes */}
+        <p className="edu-post-likes">{formatNumber(likes)} likes</p>
+
+        {/* Caption */}
+        <div className="edu-post-caption">
+          <span className="edu-post-caption-user">{post.author.username}</span>{' '}
+          <span className="edu-post-caption-text">{post.content}</span>
+        </div>
+
+        {/* Quiz */}
+        {post.quiz && (
+          <div className="edu-quiz">
+            <p className="edu-quiz-label">Quick check</p>
+            <p className="edu-quiz-question">{post.quiz.question}</p>
+            <div className="edu-quiz-options">
+              {post.quiz.options.map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => setSelectedQuiz(opt.id)}
+                  className={`edu-quiz-option ${selectedQuiz === opt.id ? 'selected' : ''}`}
+                >
+                  <span className="edu-quiz-option-label">{opt.label}</span>
+                  <span className="edu-quiz-option-text">{opt.text}</span>
+                </button>
               ))}
             </div>
-            <div className="post-image">
-              <img src={post.image} alt="Edugram story" />
+            {selectedQuiz && (
+              <div className={`edu-quiz-result ${selectedQuiz === post.quiz.correctId ? 'correct' : 'wrong'}`}>
+                <span className="edu-quiz-result-icon">
+                  {selectedQuiz === post.quiz.correctId ? <CheckIcon /> : <XIcon />}
+                </span>
+                <div>
+                  <p className="edu-quiz-result-title">{selectedQuiz === post.quiz.correctId ? 'Correct!' : 'Not quite yet.'}</p>
+                  <p className="edu-quiz-result-text">{post.quiz.explanation}</p>
+                </div>
+              </div>
+            )}
+            {post.quiz.commentPrompt && (
+              <p className="edu-quiz-prompt">{post.quiz.commentPrompt}</p>
+            )}
+          </div>
+        )}
+
+        {/* Tags */}
+        <div className="edu-post-tags">
+          {post.tags.map((tag) => (
+            <span key={tag} className="edu-post-tag">#{tag}</span>
+          ))}
+        </div>
+
+        {/* Time */}
+        <p className="edu-post-time">{post.time}</p>
+
+        {/* Comments */}
+        <button className="edu-post-comments-btn" onClick={() => setShowComments(!showComments)}>
+          View all {post.comments} comments
+        </button>
+
+        {/* Comments Section */}
+        {showComments && (
+          <div className="edu-comments-section">
+            <div className="edu-comment-input-wrap">
+              <input type="text" placeholder={post.quiz?.commentPrompt || "Add a comment..."} className="edu-comment-input" />
+              <button className="edu-comment-send">Post</button>
             </div>
-            <div className="post-actions">
-              <button className="post-action-btn">
-                <LikeIcon />
-                {post.likes}
-              </button>
-              <button className="post-action-btn">
-                <MessageIcon />
-                {post.comments}
-              </button>
-              <button className="post-action-btn">
-                <ShareIcon />
-                Chia sẻ
-              </button>
-              <button className="post-action-btn ghost">
-                <BookmarkIcon />
-                {post.saves}
-              </button>
-            </div>
-          </article>
+          </div>
+        )}
+      </div>
+    </article>
+  )
+}
+
+// Category Header Component
+function CategoryHeader({ category, postCount }) {
+  return (
+    <div className="edu-category-header">
+      <div className="edu-category-icon">
+        <span>{categoryEmojis[category] || '📚'}</span>
+      </div>
+      <div className="edu-category-info">
+        <h2 className="edu-category-title">{category}</h2>
+        <p className="edu-category-count">{postCount} posts</p>
+      </div>
+    </div>
+  )
+}
+
+// Empty State Component
+function EmptyState() {
+  return (
+    <div className="edu-empty-state">
+      <div className="edu-empty-icon">
+        <span>📚</span>
+      </div>
+      <h3 className="edu-empty-title">No posts yet</h3>
+      <p className="edu-empty-text">Be the first to share in this category!</p>
+    </div>
+  )
+}
+
+export default function FeedPage() {
+  const [selectedCategory, setSelectedCategory] = useState('All')
+
+  const filteredPosts = selectedCategory === 'All' 
+    ? allPosts 
+    : allPosts.filter(post => post.category === selectedCategory)
+
+  return (
+    <div className="edu-feed">
+      {/* Stories */}
+      <Stories />
+
+      {/* Category Filter */}
+      <div className="edu-category-filter">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat)}
+            className={`edu-category-btn ${selectedCategory === cat ? 'active' : ''}`}
+          >
+            {cat !== 'All' && <span className="edu-category-emoji">{categoryEmojis[cat]}</span>}
+            {cat}
+          </button>
         ))}
       </div>
+
+      {/* Category Header (when filtered) */}
+      {selectedCategory !== 'All' && (
+        <CategoryHeader category={selectedCategory} postCount={filteredPosts.length} />
+      )}
+
+      {/* Posts */}
+      <div className="edu-posts">
+        {filteredPosts.map((post) => (
+          <Post key={post.id} post={post} />
+        ))}
+      </div>
+
+      {/* Empty State */}
+      {filteredPosts.length === 0 && <EmptyState />}
+
+      {/* Load More */}
+      {filteredPosts.length > 0 && (
+        <div className="edu-load-more">
+          <button className="edu-load-more-btn">Load more posts</button>
+        </div>
+      )}
     </div>
   )
 }
