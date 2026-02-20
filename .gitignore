@@ -1,2 +1,4 @@
 node_modules
 .vscode
+script/jobs_output.json
+**/__pycache__/

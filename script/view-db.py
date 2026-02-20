@@ -31,7 +31,7 @@ def view_database():
         print(f"Columns: {', '.join(columns)}\n")
         
         # Get first 5 rows
-        cursor.execute(f"SELECT * FROM {table_name} LIMIT 5")
+        cursor.execute(f"SELECT * FROM {table_name} LIMIT 2")
         rows = cursor.fetchall()
         
         if not rows:
