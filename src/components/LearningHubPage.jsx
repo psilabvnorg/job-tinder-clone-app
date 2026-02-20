@@ -1,12 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getPracticeQuestions } from '../services/database'
 
-const focusSteps = [
-  { title: 'Warm-up recap', description: "Review yesterday's notes and save 1 key insight.", duration: '5 min' },
-  { title: 'Deep dive', description: 'Watch a focused lesson and write a 3-line summary.', duration: '15 min' },
-  { title: 'Practice sprint', description: 'Apply the idea in a quick quiz or exercise.', duration: '10 min' },
-]
-
 const exploreTracks = [
   { id: 1, title: 'Design Thinking', lessons: 12, level: 'Cơ bản', color: 'lavender', description: 'Khung tư duy để giải quyết bài toán người dùng.' },
   { id: 2, title: 'Product Strategy', lessons: 8, level: 'Trung cấp', color: 'peach', description: 'Học cách đặt roadmap và ưu tiên dự án.' },
@@ -38,7 +32,13 @@ const HelpIcon = () => (
   </svg>
 )
 
-function FocusSprint() {
+const BackIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M15 18l-6-6 6-6" />
+  </svg>
+)
+
+function FocusSprint({ previewVideos, totalVideos, onStartLearning }) {
   return (
     <section className="edu-sprint">
       <div className="edu-sprint-header">
@@ -56,19 +56,29 @@ function FocusSprint() {
         </div>
       </div>
 
-      <div className="edu-sprint-steps">
-        {focusSteps.map((step, i) => (
-          <div key={step.title} className="edu-sprint-step">
-            <div className="edu-sprint-step-num">{i + 1}</div>
-            <div className="edu-sprint-step-content">
-              <div className="edu-sprint-step-header">
-                <p className="edu-sprint-step-title">{step.title}</p>
-                <span className="edu-sprint-step-duration">{step.duration}</span>
-              </div>
-              <p className="edu-sprint-step-desc">{step.description}</p>
-            </div>
-          </div>
-        ))}
+      <div className="edu-playlist-preview">
+        <p className="edu-playlist-preview-label">Preview playlist ({totalVideos} video)</p>
+        <div className="edu-sprint-preview-list">
+          {previewVideos.length > 0 ? (
+            previewVideos.map((video, index) => (
+              <a
+                key={video.id || `${video.url}-${index}`}
+                className="edu-sprint-preview-item"
+                href={video.url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img className="edu-sprint-preview-thumb" src={video.thumbnail} alt={video.title} loading="lazy" />
+                <div className="edu-sprint-preview-content">
+                  <p className="edu-sprint-preview-meta">Video {index + 1}</p>
+                  <p className="edu-sprint-preview-title">{video.title}</p>
+                </div>
+              </a>
+            ))
+          ) : (
+            <p className="edu-playlist-empty">Chưa có dữ liệu playlist.</p>
+          )}
+        </div>
       </div>
 
       <div className="edu-sprint-footer">
@@ -78,9 +88,43 @@ function FocusSprint() {
           </div>
           <p className="edu-sprint-progress-text">Đã hoàn thành 3/5 phiên tuần này</p>
         </div>
-        <button className="edu-sprint-btn">Bắt đầu phiên học</button>
+        <button className="edu-sprint-btn" onClick={onStartLearning}>Bắt đầu phiên học</button>
       </div>
     </section>
+  )
+}
+
+function PlaylistPage({ videos, totalVideos, onBack }) {
+  return (
+    <div className="learning-playlist-page">
+      <div className="learning-playlist-header">
+        <button className="learning-playlist-back" onClick={onBack}>
+          <BackIcon />
+          <span>Quay lại</span>
+        </button>
+      </div>
+
+      <section className="learning-section learning-playlist-section">
+        <h2 className="learning-playlist-title">Toàn bộ playlist ({totalVideos} video)</h2>
+        <div className="learning-playlist-list">
+          {videos.map((video, index) => (
+            <a
+              key={video.id || `${video.url}-${index}`}
+              className="learning-playlist-item"
+              href={video.url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img className="learning-playlist-thumb" src={video.thumbnail} alt={video.title} loading="lazy" />
+              <div className="learning-playlist-content">
+                <p className="learning-playlist-index">Video {index + 1}</p>
+                <p className="learning-playlist-item-title">{video.title}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    </div>
   )
 }
 
@@ -158,24 +202,51 @@ function PracticeCarousel({ practiceQuestions }) {
 
 export default function LearningHubPage() {
   const [practiceQuestions, setPracticeQuestions] = useState([])
+  const [playlistVideos, setPlaylistVideos] = useState([])
+  const [playlistCount, setPlaylistCount] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [learningScreen, setLearningScreen] = useState('home')
 
   useEffect(() => {
     async function loadData() {
       try {
-        const questions = await getPracticeQuestions()
+        const [questions, playlistRes] = await Promise.all([
+          getPracticeQuestions(),
+          fetch('/data/playlist.json'),
+        ])
+
         setPracticeQuestions(questions)
+
+        if (playlistRes.ok) {
+          const playlistData = await playlistRes.json()
+          const videos = Array.isArray(playlistData?.videos) ? playlistData.videos : []
+          setPlaylistVideos(videos)
+          setPlaylistCount(Number.isFinite(playlistData?.count) ? playlistData.count : videos.length)
+        }
       } catch (err) {
-        console.error('Error loading practice questions:', err)
+        console.error('Error loading learning data:', err)
       } finally {
         setLoading(false)
       }
     }
+
     loadData()
   }, [])
 
   if (loading) {
     return <div className="learning-view"><p style={{ padding: '2rem', textAlign: 'center' }}>Đang tải...</p></div>
+  }
+
+  if (learningScreen === 'playlist') {
+    return (
+      <div className="learning-view">
+        <PlaylistPage
+          videos={playlistVideos}
+          totalVideos={playlistCount || playlistVideos.length}
+          onBack={() => setLearningScreen('home')}
+        />
+      </div>
+    )
   }
 
   return (
@@ -191,7 +262,11 @@ export default function LearningHubPage() {
         </div>
       </div>
 
-      <FocusSprint />
+      <FocusSprint
+        previewVideos={playlistVideos.slice(0, 3)}
+        totalVideos={playlistCount || playlistVideos.length}
+        onStartLearning={() => setLearningScreen('playlist')}
+      />
       <PracticeCarousel practiceQuestions={practiceQuestions} />
 
       <section className="learning-section">

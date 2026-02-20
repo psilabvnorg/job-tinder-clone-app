@@ -122,7 +122,7 @@ export default function App() {
       </header>
 
       {/* Main Content */}
-      <main className="main-content">
+      <main className={`main-content ${activeView === 'swipe' ? 'swipe-mode' : ''}`}>
         {activeView === 'swipe' && (
           <JobSwipe
             onSwipeLeft={handleSwipeLeft}
