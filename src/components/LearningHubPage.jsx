@@ -78,7 +78,7 @@ function FocusSprint() {
           </div>
           <p className="edu-sprint-progress-text">3 of 5 weekly sessions completed</p>
         </div>
-        <button className="edu-sprint-btn">Start sprint</button>
+        <button className="edu-sprint-btn">Bắt đầu phiên học</button>
       </div>
     </section>
   )

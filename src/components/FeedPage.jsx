@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react'
 import { getStories, getPosts, categories, categoryEmojis, formatNumber } from '../services/database'
 
+const categoryLabels = {
+  All: 'Tất cả',
+  IELTS: 'IELTS',
+  Marketing: 'Tiếp thị',
+  Finance: 'Tài chính',
+  MBA: 'MBA',
+  Design: 'Thiết kế',
+  Leadership: 'Lãnh đạo',
+}
+
 // Icons
 const HeartIcon = ({ filled }) => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill={filled ? '#ef4444' : 'none'} stroke={filled ? '#ef4444' : 'currentColor'} strokeWidth="2">
@@ -66,7 +76,7 @@ function Stories({ stories }) {
         <button className="edu-story-add">
           <PlusIcon />
         </button>
-        <span className="edu-story-name">Add</span>
+        <span className="edu-story-name">Thêm</span>
       </div>
 
       {stories.map((story) => (
@@ -190,14 +200,14 @@ function Post({ post }) {
         <p className="edu-post-time">{post.time}</p>
 
         <button className="edu-post-comments-btn" onClick={() => setShowComments(!showComments)}>
-          View all {post.comments} comments
+          Xem tất cả {post.comments} bình luận
         </button>
 
         {showComments && (
           <div className="edu-comments-section">
             <div className="edu-comment-input-wrap">
               <input type="text" placeholder="Add a comment..." className="edu-comment-input" />
-              <button className="edu-comment-send">Post</button>
+              <button className="edu-comment-send">Đăng</button>
             </div>
           </div>
         )}
@@ -276,7 +286,7 @@ export default function FeedPage() {
             className={`edu-category-btn ${selectedCategory === cat ? 'active' : ''}`}
           >
             {cat !== 'All' && <span className="edu-category-emoji">{categoryEmojis[cat]}</span>}
-            {cat}
+            {categoryLabels[cat] || cat}
           </button>
         ))}
       </div>
@@ -295,7 +305,7 @@ export default function FeedPage() {
 
       {filteredPosts.length > 0 && (
         <div className="edu-load-more">
-          <button className="edu-load-more-btn">Load more posts</button>
+          <button className="edu-load-more-btn">Tải thêm bài viết</button>
         </div>
       )}
     </div>

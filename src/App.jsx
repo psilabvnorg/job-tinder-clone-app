@@ -87,7 +87,7 @@ export default function App() {
   const navItems = [
     { id: 'swipe', icon: BriefcaseIcon, label: 'Vuốt' },
     { id: 'matched', icon: () => <HeartIcon filled={false} />, label: 'Đã lưu', badge: savedJobs.length },
-    { id: 'feed', icon: LayoutIcon, label: 'Feed' },
+    { id: 'feed', icon: LayoutIcon, label: 'Bảng tin' },
     { id: 'learning', icon: BookIcon, label: 'Học tập' },
     { id: 'advisor', icon: SparklesIcon, label: 'Cố vấn' },
   ]
