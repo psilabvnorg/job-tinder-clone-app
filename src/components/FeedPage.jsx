@@ -163,7 +163,7 @@ function Post({ post }) {
 
         {post.quiz && (
           <div className="edu-quiz">
-            <p className="edu-quiz-label">Quick check</p>
+            <p className="edu-quiz-label">Câu hỏi</p>
             <p className="edu-quiz-question">{post.quiz.question}</p>
             <div className="edu-quiz-options">
               {post.quiz.options.map((opt) => (
