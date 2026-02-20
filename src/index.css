@@ -3704,3 +3704,807 @@ body {
   color: #6b7280;
   margin-top: 2px;
 }
+
+/* ============================================= */
+/* JobHub Brand Override - Bold Black/Orange UI  */
+/* ============================================= */
+
+:root {
+  --brand-orange: #ff9800;
+  --brand-orange-strong: #ffb300;
+  --brand-black: #050505;
+  --surface-1: #111111;
+  --surface-2: #1b1b1b;
+  --surface-3: #242424;
+  --text-strong: #f7f7f7;
+  --text-muted: #b8b8b8;
+  --ring: #ff9800;
+  --danger: #ff4d57;
+  --success: #39d98a;
+}
+
+body {
+  background:
+    radial-gradient(circle at 15% 10%, rgba(255, 152, 0, 0.12), transparent 30%),
+    radial-gradient(circle at 90% 80%, rgba(255, 152, 0, 0.08), transparent 35%),
+    var(--brand-black);
+  color: var(--text-strong);
+  font-family: "Poppins", "Segoe UI", Tahoma, Arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, .header-title, .saved-title, .learning-title {
+  letter-spacing: 0.02em;
+  font-weight: 800;
+}
+
+.app-container {
+  background: transparent;
+}
+
+.header {
+  background: rgba(10, 10, 10, 0.96);
+  border-bottom: 1px solid rgba(255, 152, 0, 0.35);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+}
+
+.header-brand {
+  gap: 0;
+}
+
+.brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 1;
+  animation: brand-rise 0.45s ease-out;
+}
+
+.brand-job {
+  background: #000;
+  color: #fff;
+  padding: 7px 12px 8px;
+  border-radius: 6px 0 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.brand-hub {
+  background: var(--brand-orange);
+  color: #070707;
+  padding: 7px 12px 8px;
+  border-radius: 0 10px 10px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.25);
+}
+
+.header-btn {
+  background: var(--surface-2);
+  color: var(--text-strong);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.header-btn:hover {
+  background: var(--surface-3);
+  border-color: rgba(255, 152, 0, 0.5);
+}
+
+.header-btn .badge {
+  background-color: var(--brand-orange);
+  color: #111;
+  font-weight: 800;
+}
+
+.main-content {
+  background: transparent;
+}
+
+.bottom-nav {
+  background: rgba(8, 8, 8, 0.98);
+  border-top: 1px solid rgba(255, 152, 0, 0.35);
+}
+
+.nav-item {
+  color: #8e8e8e;
+}
+
+.nav-item.active {
+  color: var(--brand-orange);
+}
+
+.nav-item.active svg {
+  filter: drop-shadow(0 0 8px rgba(255, 152, 0, 0.4));
+}
+
+.job-card {
+  border: 1px solid rgba(255, 152, 0, 0.42);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.58);
+}
+
+.job-card-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.96) 0%, rgba(0, 0, 0, 0.6) 52%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+.job-card-details {
+  background: rgba(20, 20, 20, 0.92);
+  border-color: rgba(255, 152, 0, 0.36);
+}
+
+.job-badge.salary,
+.detail-link,
+.filter-chip {
+  background: var(--brand-orange);
+  color: #111;
+}
+
+.job-badge.remote {
+  background: #272727;
+  color: #f1f1f1;
+}
+
+.swipe-indicator.save {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.swipe-indicator.pass {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.action-btn {
+  background: #0e0e0e;
+  border-width: 3px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.42);
+}
+
+.action-btn.pass {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.action-btn.save {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.action-btn.info {
+  border-color: var(--brand-orange);
+  background: var(--brand-orange);
+  color: #111;
+}
+
+.filter-toggle-btn.active,
+.clear-filters-btn,
+.panel-toggle,
+.primary-button,
+.learning-button,
+.explore-button,
+.practice-button,
+.section-link,
+.advisor-primary-btn,
+.advisor-chat-btn,
+.profile-primary-btn,
+.llm-action-btn,
+.edu-sprint-btn {
+  background: var(--brand-orange);
+  color: #111;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  font-weight: 800;
+}
+
+.filter-panel,
+.saved-card,
+.stat-card,
+.advisor-detail,
+.advisor-panel,
+.advisor-profile-card,
+.advisor-chat-card,
+.profile-card,
+.profile-hero-card,
+.cv-card,
+.edu-post,
+.edu-sprint,
+.edu-practice,
+.explore-card,
+.practice-card,
+.edu-quiz {
+  background: var(--surface-1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+  color: var(--text-strong);
+}
+
+.saved-subtitle,
+.saved-card-company,
+.saved-card-meta,
+.advisor-summary,
+.advisor-page-subtitle,
+.profile-card-subtitle,
+.edu-post-time,
+.edu-post-username,
+.edu-post-caption,
+.edu-post-comments-btn,
+.edu-empty-text,
+.edu-sprint-subtitle,
+.edu-practice-subtitle,
+.learning-subtitle,
+.practice-time,
+.explore-desc,
+.cv-page-subtitle {
+  color: var(--text-muted);
+}
+
+.saved-card-title,
+.saved-title,
+.advisor-page-title,
+.advisor-headline,
+.profile-page h3,
+.edu-post-name,
+.edu-sprint-title,
+.edu-practice-title,
+.learning-title,
+.explore-title,
+.practice-title,
+.cv-page-title,
+.cv-card-title {
+  color: var(--text-strong);
+}
+
+.edu-category-btn,
+.edu-load-more-btn,
+.advisor-tab,
+.sidebar-link {
+  background: var(--surface-2);
+  color: var(--text-strong);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.edu-category-btn.active,
+.advisor-tab.active {
+  background: var(--brand-orange);
+  color: #111;
+  border-color: var(--brand-orange);
+}
+
+.edu-post-category,
+.edu-sprint-badge,
+.practice-progress,
+.cv-badge,
+.advisor-badge,
+.learning-streak {
+  background: rgba(255, 152, 0, 0.18);
+  color: #ffd28b;
+  border: 1px solid rgba(255, 152, 0, 0.36);
+}
+
+.edu-post-image,
+.edu-practice-image {
+  background: #1f1f1f;
+}
+
+.edu-comment-input,
+.advisor-input,
+.cv-input {
+  background: #131313;
+  color: var(--text-strong);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.edu-comment-input:focus,
+.advisor-input:focus,
+.cv-input:focus {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
+}
+
+.highlight-dot,
+.legend-dot.strong {
+  background: var(--success);
+}
+
+.legend-dot.missing {
+  background: var(--brand-orange);
+}
+
+.legend-dot.weak {
+  background: var(--danger);
+}
+
+.edu-action-btn.saved,
+.edu-post-tag,
+.advisor-chat-bubble.user,
+.rewrite-text.improved {
+  color: #ffc466;
+}
+
+.empty-state,
+.edu-empty-state {
+  color: var(--text-muted);
+}
+
+.empty-state-title,
+.edu-empty-title {
+  color: var(--text-strong);
+}
+
+@keyframes brand-rise {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-lockup {
+    font-size: 20px;
+  }
+
+  .brand-job,
+  .brand-hub {
+    padding: 6px 9px 7px;
+  }
+}
+
+/* Swipe filter + scrollbar refinement */
+.filter-bar {
+  background: linear-gradient(180deg, rgba(18, 18, 18, 0.95), rgba(12, 12, 12, 0.95));
+  border-bottom: 1px solid rgba(255, 152, 0, 0.35);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.filter-toggle-btn {
+  background: #171717;
+  color: #f2f2f2;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-weight: 700;
+}
+
+.filter-toggle-btn:hover {
+  border-color: rgba(255, 152, 0, 0.65);
+  color: #fff;
+}
+
+.filter-toggle-btn.active {
+  background: linear-gradient(180deg, #ffb423, #ff9800);
+  color: #121212;
+  border-color: rgba(255, 193, 86, 0.85);
+  box-shadow: 0 8px 16px rgba(255, 152, 0, 0.28);
+}
+
+.filter-count {
+  background: #0f0f0f;
+  color: #ffd38a;
+}
+
+.filter-toggle-btn.active .filter-count {
+  background: #0f0f0f;
+  color: #ffb547;
+}
+
+.filter-info {
+  color: #d7d7d7;
+  font-weight: 600;
+}
+
+.filter-panel {
+  position: relative;
+  margin: 8px 12px 0;
+  padding: 14px;
+  border-radius: 14px;
+  background:
+    linear-gradient(145deg, rgba(24, 24, 24, 0.96), rgba(14, 14, 14, 0.98));
+  border: 1px solid rgba(255, 152, 0, 0.35);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.42);
+}
+
+.filter-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  pointer-events: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.filter-group {
+  min-width: 180px;
+}
+
+.filter-label {
+  color: #d4d4d4;
+  font-weight: 700;
+}
+
+.filter-select {
+  background-color: #101010;
+  color: #f3f3f3;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffad33' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+.filter-select:hover {
+  border-color: rgba(255, 152, 0, 0.6);
+}
+
+.filter-select:focus {
+  border-color: #ffad33;
+  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
+}
+
+.clear-filters-btn {
+  border-radius: 12px;
+}
+
+.job-card-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #ffad33 rgba(0, 0, 0, 0.3);
+}
+
+.job-card-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.job-card-scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 999px;
+}
+
+.job-card-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ffc14d, #ff9800);
+  border-radius: 999px;
+  border: 2px solid rgba(0, 0, 0, 0.18);
+}
+
+.job-card-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ffd27a, #ffad33);
+}
+
+/* Feed + Learning + Advisor consistency pass */
+.edu-feed,
+.learning-view,
+.advisor-profile-page,
+.advisor-view,
+.advisor-profile-view {
+  background: transparent;
+}
+
+.learning-hero,
+.learning-section,
+.advisor-tabs,
+.advisor-header,
+.advisor-highlight,
+.advisor-chat-log,
+.edu-comments-section,
+.edu-category-header {
+  background: var(--surface-1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-strong);
+}
+
+.explore-card.lavender,
+.explore-card.peach,
+.explore-card.mint,
+.explore-card.sky {
+  background: linear-gradient(160deg, #161616, #0f0f0f);
+  border: 1px solid rgba(255, 152, 0, 0.35);
+}
+
+.explore-meta,
+.practice-time,
+.advisor-chat-sub,
+.advisor-style,
+.advisor-title,
+.learning-streak,
+.edu-story-name,
+.edu-post-username,
+.edu-post-time {
+  color: var(--text-muted);
+}
+
+.advisor-card {
+  background: linear-gradient(160deg, #171717, #101010);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.advisor-card.active {
+  border-color: rgba(255, 152, 0, 0.75);
+  box-shadow: 0 10px 22px rgba(255, 152, 0, 0.16);
+}
+
+.advisor-badge,
+.edu-post-category,
+.edu-sprint-badge,
+.learning-streak {
+  color: #ffcc80;
+  border-color: rgba(255, 152, 0, 0.45);
+  background: rgba(255, 152, 0, 0.14);
+}
+
+.advisor-chat-bubble.mentor {
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-strong);
+}
+
+.advisor-chat-bubble.user {
+  background: rgba(255, 152, 0, 0.16);
+  border: 1px solid rgba(255, 152, 0, 0.35);
+  color: #ffd598;
+}
+
+.edu-post-online,
+.verified-badge-inline {
+  background: var(--brand-orange);
+  color: #111;
+}
+
+.edu-post-name-row svg {
+  color: var(--brand-orange);
+}
+
+.edu-story-ring.unseen {
+  background: linear-gradient(135deg, #ff9800, #ffb74d, #ffd180);
+}
+
+.edu-story-add {
+  border-color: rgba(255, 152, 0, 0.55);
+  color: var(--brand-orange);
+  background: #151515;
+}
+
+.edu-story-add:hover {
+  background: #1f1f1f;
+  border-color: rgba(255, 152, 0, 0.8);
+}
+
+.edu-post-more,
+.edu-action-btn,
+.edu-comment-send {
+  color: var(--text-strong);
+}
+
+.edu-action-btn.saved {
+  color: var(--brand-orange);
+}
+
+.learning-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  min-height: 58px;
+  padding: 10px 14px;
+  text-align: center;
+  white-space: normal;
+  word-break: keep-all;
+  line-height: 1.28;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: "Poppins", "Segoe UI", Tahoma, Arial, sans-serif;
+  letter-spacing: 0.01em;
+}
+
+/* Thin premium horizontal sliders */
+.advisor-row,
+.instructors-row,
+.edu-category-filter,
+.edu-stories,
+.edu-practice-cards {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 173, 51, 0.7) transparent;
+}
+
+.advisor-row::-webkit-scrollbar,
+.instructors-row::-webkit-scrollbar,
+.edu-category-filter::-webkit-scrollbar,
+.edu-stories::-webkit-scrollbar,
+.edu-practice-cards::-webkit-scrollbar {
+  height: 5px;
+}
+
+.advisor-row::-webkit-scrollbar-track,
+.instructors-row::-webkit-scrollbar-track,
+.edu-category-filter::-webkit-scrollbar-track,
+.edu-stories::-webkit-scrollbar-track,
+.edu-practice-cards::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+}
+
+.advisor-row::-webkit-scrollbar-thumb,
+.instructors-row::-webkit-scrollbar-thumb,
+.edu-category-filter::-webkit-scrollbar-thumb,
+.edu-stories::-webkit-scrollbar-thumb,
+.edu-practice-cards::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #ffad33, #ff9800);
+  border-radius: 999px;
+}
+
+.advisor-row::-webkit-scrollbar-thumb:hover,
+.instructors-row::-webkit-scrollbar-thumb:hover,
+.edu-category-filter::-webkit-scrollbar-thumb:hover,
+.edu-stories::-webkit-scrollbar-thumb:hover,
+.edu-practice-cards::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #ffc46b, #ffad33);
+}
+
+.advisor-row::-webkit-scrollbar-button,
+.instructors-row::-webkit-scrollbar-button,
+.edu-category-filter::-webkit-scrollbar-button,
+.edu-stories::-webkit-scrollbar-button,
+.edu-practice-cards::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+/* Global right-side vertical scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 173, 51, 0.72) rgba(255, 255, 255, 0.08);
+}
+
+*::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ffad33, #ff9800);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ffc46b, #ffad33);
+}
+
+*::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+/* Global typography safety for Vietnamese diacritics */
+html, body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: "Poppins", "Segoe UI", Tahoma, Arial, sans-serif;
+  line-height: 1.32;
+}
+
+button,
+.filter-toggle-btn,
+.clear-filters-btn,
+.panel-toggle,
+.primary-button,
+.learning-button,
+.explore-button,
+.practice-button,
+.section-link,
+.advisor-primary-btn,
+.advisor-chat-btn,
+.profile-primary-btn,
+.llm-action-btn,
+.edu-sprint-btn,
+.edu-load-more-btn,
+.edu-category-btn,
+.advisor-tab,
+.practice-chip,
+.cv-badge-text,
+.learning-streak,
+.advisor-badge,
+.edu-post-category {
+  line-height: 1.28;
+  letter-spacing: 0.01em;
+  white-space: normal;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.learning-streak,
+.advisor-badge,
+.edu-post-category,
+.cv-badge-text,
+.practice-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.bottom-nav .nav-item span,
+.edu-story-name,
+.filter-info,
+.saved-subtitle,
+.advisor-page-subtitle,
+.learning-subtitle {
+  line-height: 1.35;
+}
+
+/* Remove leftover white blocks in Feed/Learning/Advisor */
+.edu-sprint-step,
+.edu-practice-card,
+.edu-practice-option,
+.edu-quiz-option,
+.edu-quiz-result,
+.detail-card,
+.advisor-highlight,
+.advisor-tags span,
+.advisor-avatar-large {
+  background: #171717 !important;
+  color: var(--text-strong);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.edu-sprint-step *,
+.edu-practice-option *,
+.edu-quiz-option *,
+.edu-quiz-result *,
+.detail-card *,
+.advisor-highlight * {
+  color: var(--text-strong) !important;
+}
+
+.edu-quiz-option-label,
+.edu-practice-option-label,
+.edu-sprint-step-num {
+  background: #222 !important;
+  color: #ffb44a !important;
+}
+
+.edu-sprint-progress-bar,
+.practice-bar,
+.impact-bar {
+  background: #242424 !important;
+}
+
+.edu-sprint-progress-fill,
+.practice-fill,
+.impact-fill {
+  background: linear-gradient(90deg, #ffad33, #ff9800) !important;
+}
+
+.advisor-avatar-large {
+  background: linear-gradient(145deg, #ff9800, #f57c00) !important;
+  color: #111 !important;
+}
+
+.detail-bullet,
+.advisor-style,
+.advisor-bio,
+.edu-practice-result-text,
+.edu-quiz-result-text {
+  color: var(--text-muted) !important;
+}
+
+.edu-sprint-step-desc,
+.edu-practice-option-text,
+.edu-quiz-option-text,
+.edu-quiz-result-text,
+.edu-practice-result-text,
+.detail-bullet {
+  color: #d0d0d0 !important;
+}

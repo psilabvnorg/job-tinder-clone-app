@@ -97,8 +97,10 @@ export default function App() {
       {/* Header */}
       <header className="header">
         <div className="header-brand">
-          <div className="header-logo">💼</div>
-          <span className="header-title">JobSwipe</span>
+          <div className="brand-lockup" aria-label="JobHub">
+            <span className="brand-job">Job</span>
+            <span className="brand-hub">Hub</span>
+          </div>
         </div>
         <div className="header-actions">
           <button 

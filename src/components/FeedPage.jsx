@@ -31,7 +31,7 @@ const ShareIcon = () => (
 )
 
 const BookmarkIcon = ({ filled }) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill={filled ? '#9333ea' : 'none'} stroke={filled ? '#9333ea' : 'currentColor'} strokeWidth="2">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
   </svg>
 )
@@ -43,7 +43,7 @@ const MoreIcon = () => (
 )
 
 const VerifiedIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="#3b82f6">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
     <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
   </svg>
 )
@@ -154,7 +154,7 @@ function Post({ post }) {
           </button>
         </div>
 
-        <p className="edu-post-likes">{formatNumber(likes)} likes</p>
+        <p className="edu-post-likes">{formatNumber(likes)} lượt thích</p>
 
         <div className="edu-post-caption">
           <span className="edu-post-caption-user">{post.author.username}</span>{' '}
@@ -206,7 +206,7 @@ function Post({ post }) {
         {showComments && (
           <div className="edu-comments-section">
             <div className="edu-comment-input-wrap">
-              <input type="text" placeholder="Add a comment..." className="edu-comment-input" />
+              <input type="text" placeholder="Thêm bình luận..." className="edu-comment-input" />
               <button className="edu-comment-send">Đăng</button>
             </div>
           </div>
@@ -224,7 +224,7 @@ function CategoryHeader({ category, postCount }) {
       </div>
       <div className="edu-category-info">
         <h2 className="edu-category-title">{category}</h2>
-        <p className="edu-category-count">{postCount} posts</p>
+        <p className="edu-category-count">{postCount} bài viết</p>
       </div>
     </div>
   )
@@ -236,8 +236,8 @@ function EmptyState() {
       <div className="edu-empty-icon">
         <span>📚</span>
       </div>
-      <h3 className="edu-empty-title">No posts yet</h3>
-      <p className="edu-empty-text">Be the first to share in this category!</p>
+      <h3 className="edu-empty-title">Chưa có bài viết</h3>
+      <p className="edu-empty-text">Hãy là người đầu tiên chia sẻ trong mục này.</p>
     </div>
   )
 }
@@ -271,7 +271,7 @@ export default function FeedPage() {
     : allPosts.filter(post => post.category === selectedCategory)
 
   if (loading) {
-    return <div className="edu-feed"><p style={{ padding: '2rem', textAlign: 'center' }}>Loading...</p></div>
+    return <div className="edu-feed"><p style={{ padding: '2rem', textAlign: 'center' }}>Đang tải...</p></div>
   }
 
   return (

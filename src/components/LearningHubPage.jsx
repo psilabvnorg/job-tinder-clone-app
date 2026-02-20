@@ -43,16 +43,16 @@ function FocusSprint() {
     <section className="edu-sprint">
       <div className="edu-sprint-header">
         <div>
-          <p className="edu-sprint-label">Focus Sprint</p>
-          <h2 className="edu-sprint-title">25-minute learning plan</h2>
-          <p className="edu-sprint-subtitle">Stay consistent with a guided micro-session.</p>
+          <p className="edu-sprint-label">Nước rút tập trung</p>
+          <h2 className="edu-sprint-title">Lộ trình học 25 phút</h2>
+          <p className="edu-sprint-subtitle">Giữ nhịp ổn định với phiên học siêu gọn.</p>
         </div>
         <div className="edu-sprint-meta">
           <div className="edu-sprint-goal">
-            <p className="edu-sprint-goal-label">Today's goal</p>
-            <p className="edu-sprint-goal-value">1 lesson + 1 quiz</p>
+            <p className="edu-sprint-goal-label">Mục tiêu hôm nay</p>
+            <p className="edu-sprint-goal-value">1 bài học + 1 quiz</p>
           </div>
-          <span className="edu-sprint-badge">80% ready</span>
+          <span className="edu-sprint-badge">Sẵn sàng 80%</span>
         </div>
       </div>
 
@@ -76,7 +76,7 @@ function FocusSprint() {
           <div className="edu-sprint-progress-bar">
             <div className="edu-sprint-progress-fill" style={{ width: '60%' }} />
           </div>
-          <p className="edu-sprint-progress-text">3 of 5 weekly sessions completed</p>
+          <p className="edu-sprint-progress-text">Đã hoàn thành 3/5 phiên tuần này</p>
         </div>
         <button className="edu-sprint-btn">Bắt đầu phiên học</button>
       </div>
@@ -99,13 +99,13 @@ function PracticeCarousel({ practiceQuestions }) {
     <section className="edu-practice">
       <div className="edu-practice-header">
         <div>
-          <p className="edu-practice-label">Practice</p>
-          <h2 className="edu-practice-title">Swipeable quick checks</h2>
-          <p className="edu-practice-subtitle">Answer a 10-second quiz, then explain your reasoning in comments.</p>
+          <p className="edu-practice-label">Luyện tập</p>
+          <h2 className="edu-practice-title">Bài kiểm tra lướt nhanh</h2>
+          <p className="edu-practice-subtitle">Trả lời quiz 10 giây, sau đó giải thích cách nghĩ của bạn.</p>
         </div>
         <div className="edu-practice-hint">
           <HelpIcon />
-          Swipe to explore
+          Lướt để khám phá
         </div>
       </div>
 
@@ -142,7 +142,7 @@ function PracticeCarousel({ practiceQuestions }) {
                       {isCorrect ? <CheckIcon /> : <XIcon />}
                     </span>
                     <div>
-                      <p className="edu-practice-result-title">{isCorrect ? 'Nice work!' : 'Close — try again.'}</p>
+                      <p className="edu-practice-result-title">{isCorrect ? 'Làm tốt lắm!' : 'Gần đúng - thử lại nhé.'}</p>
                       <p className="edu-practice-result-text">{question.explanation}</p>
                     </div>
                   </div>
@@ -175,15 +175,15 @@ export default function LearningHubPage() {
   }, [])
 
   if (loading) {
-    return <div className="learning-view"><p style={{ padding: '2rem', textAlign: 'center' }}>Loading...</p></div>
+    return <div className="learning-view"><p style={{ padding: '2rem', textAlign: 'center' }}>Đang tải...</p></div>
   }
 
   return (
     <div className="learning-view">
       <div className="learning-hero">
         <div>
-          <h2 className="learning-title">Learning Hub</h2>
-          <p className="learning-subtitle">Kết hợp Explore + Practice theo phong cách Edugram</p>
+          <h2 className="learning-title">Hub học tập JobHub</h2>
+          <p className="learning-subtitle">Kết hợp Khám phá + Luyện tập theo phong cách Edugram</p>
         </div>
         <div className="learning-cta">
           <button className="learning-button">Bắt đầu hôm nay</button>
@@ -196,7 +196,7 @@ export default function LearningHubPage() {
 
       <section className="learning-section">
         <div className="section-header">
-          <h3>Explore Edugram</h3>
+          <h3>Khám phá Edugram</h3>
           <button className="section-link">Xem tất cả</button>
         </div>
         <div className="explore-grid">
@@ -213,7 +213,7 @@ export default function LearningHubPage() {
 
       <section className="learning-section">
         <div className="section-header">
-          <h3>Practice Edugram</h3>
+          <h3>Luyện tập Edugram</h3>
           <button className="section-link">Tạo kế hoạch</button>
         </div>
         <div className="practice-list">

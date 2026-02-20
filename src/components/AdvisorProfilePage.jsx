@@ -180,7 +180,7 @@ const chatStreams = [
   },
   {
     id: 'jobswipe',
-    title: 'JobSwipe Career Chat',
+    title: 'JobHub Career Chat',
     subtitle: 'Chỉnh CV, luyện phỏng vấn, tối ưu ATS.',
     messages: [
       { role: 'coach', text: 'Gửi mình bullet mạnh nhất bạn đang có.' },
@@ -264,7 +264,6 @@ export default function AdvisorProfilePage() {
               <div
                 key={item.name}
                 className={`advisor-card ${index === selectedAdvisor ? 'active' : ''}`}
-                style={{ backgroundColor: item.accent }}
                 onClick={() => setSelectedAdvisor(index)}
               >
                 <div className="advisor-avatar">
