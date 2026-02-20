@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { practiceQuestions } from '../data/mockJobs'
+import { useState, useEffect } from 'react'
+import { getPracticeQuestions } from '../services/database'
 
 const focusSteps = [
   { title: 'Warm-up recap', description: "Review yesterday's notes and save 1 key insight.", duration: '5 min' },
@@ -8,65 +8,18 @@ const focusSteps = [
 ]
 
 const exploreTracks = [
-  {
-    id: 1,
-    title: 'Design Thinking',
-    lessons: 12,
-    level: 'Cơ bản',
-    color: 'lavender',
-    description: 'Khung tư duy để giải quyết bài toán người dùng.'
-  },
-  {
-    id: 2,
-    title: 'Product Strategy',
-    lessons: 8,
-    level: 'Trung cấp',
-    color: 'peach',
-    description: 'Học cách đặt roadmap và ưu tiên dự án.'
-  },
-  {
-    id: 3,
-    title: 'UX Research',
-    lessons: 10,
-    level: 'Trung cấp',
-    color: 'mint',
-    description: 'Kỹ thuật phỏng vấn và tổng hợp insight.'
-  },
-  {
-    id: 4,
-    title: 'Portfolio Stories',
-    lessons: 6,
-    level: 'Nâng cao',
-    color: 'sky',
-    description: 'Kể chuyện kết quả để chinh phục recruiter.'
-  }
+  { id: 1, title: 'Design Thinking', lessons: 12, level: 'Cơ bản', color: 'lavender', description: 'Khung tư duy để giải quyết bài toán người dùng.' },
+  { id: 2, title: 'Product Strategy', lessons: 8, level: 'Trung cấp', color: 'peach', description: 'Học cách đặt roadmap và ưu tiên dự án.' },
+  { id: 3, title: 'UX Research', lessons: 10, level: 'Trung cấp', color: 'mint', description: 'Kỹ thuật phỏng vấn và tổng hợp insight.' },
+  { id: 4, title: 'Portfolio Stories', lessons: 6, level: 'Nâng cao', color: 'sky', description: 'Kể chuyện kết quả để chinh phục recruiter.' }
 ]
 
 const practiceSessions = [
-  {
-    id: 1,
-    title: 'Thử thách 7 ngày cải thiện CV',
-    time: '20 phút/ngày',
-    progress: 65,
-    tasks: ['Viết lại summary', 'Thêm số liệu', 'Tối ưu kỹ năng']
-  },
-  {
-    id: 2,
-    title: 'Case study: App giao đồ ăn',
-    time: '2 giờ',
-    progress: 30,
-    tasks: ['Mapping journey', 'Wireframe flow', 'Đo lường KPI']
-  },
-  {
-    id: 3,
-    title: 'Mock interview UX',
-    time: '45 phút',
-    progress: 80,
-    tasks: ['Chuẩn bị story', 'Thử trả lời', 'Nhận feedback']
-  }
+  { id: 1, title: 'Thử thách 7 ngày cải thiện CV', time: '20 phút/ngày', progress: 65, tasks: ['Viết lại summary', 'Thêm số liệu', 'Tối ưu kỹ năng'] },
+  { id: 2, title: 'Case study: App giao đồ ăn', time: '2 giờ', progress: 30, tasks: ['Mapping journey', 'Wireframe flow', 'Đo lường KPI'] },
+  { id: 3, title: 'Mock interview UX', time: '45 phút', progress: 80, tasks: ['Chuẩn bị story', 'Thử trả lời', 'Nhận feedback'] }
 ]
 
-// Icons
 const CheckIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
     <polyline points="20 6 9 17 4 12"/>
@@ -85,7 +38,6 @@ const HelpIcon = () => (
   </svg>
 )
 
-// Focus Sprint Component
 function FocusSprint() {
   return (
     <section className="edu-sprint">
@@ -132,12 +84,15 @@ function FocusSprint() {
   )
 }
 
-// Practice Carousel Component
-function PracticeCarousel() {
+function PracticeCarousel({ practiceQuestions }) {
   const [selections, setSelections] = useState({})
 
   const handleSelect = (questionId, optionId) => {
     setSelections(prev => ({ ...prev, [questionId]: optionId }))
+  }
+
+  if (!practiceQuestions.length) {
+    return null
   }
 
   return (
@@ -202,6 +157,27 @@ function PracticeCarousel() {
 }
 
 export default function LearningHubPage() {
+  const [practiceQuestions, setPracticeQuestions] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const questions = await getPracticeQuestions()
+        setPracticeQuestions(questions)
+      } catch (err) {
+        console.error('Error loading practice questions:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadData()
+  }, [])
+
+  if (loading) {
+    return <div className="learning-view"><p style={{ padding: '2rem', textAlign: 'center' }}>Loading...</p></div>
+  }
+
   return (
     <div className="learning-view">
       <div className="learning-hero">
@@ -215,11 +191,8 @@ export default function LearningHubPage() {
         </div>
       </div>
 
-      {/* Focus Sprint - 25-minute learning plan */}
       <FocusSprint />
-
-      {/* Swipeable Quick Checks */}
-      <PracticeCarousel />
+      <PracticeCarousel practiceQuestions={practiceQuestions} />
 
       <section className="learning-section">
         <div className="section-header">

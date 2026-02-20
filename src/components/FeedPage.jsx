@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { stories, instructors, posts as allPosts, categories, categoryEmojis, formatNumber } from '../data/mockJobs'
+import { useState, useEffect } from 'react'
+import { getStories, getPosts, categories, categoryEmojis, formatNumber } from '../services/database'
 
 // Icons
 const HeartIcon = ({ filled }) => (
@@ -57,12 +57,11 @@ const PlusIcon = () => (
 )
 
 // Stories Component
-function Stories() {
+function Stories({ stories }) {
   const [activeStory, setActiveStory] = useState(null)
 
   return (
     <div className="edu-stories">
-      {/* Add Story Button */}
       <div className="edu-story-item">
         <button className="edu-story-add">
           <PlusIcon />
@@ -70,7 +69,6 @@ function Stories() {
         <span className="edu-story-name">Add</span>
       </div>
 
-      {/* Story Items */}
       {stories.map((story) => (
         <button
           key={story.id}
@@ -104,7 +102,6 @@ function Post({ post }) {
 
   return (
     <article className="edu-post">
-      {/* Header */}
       <div className="edu-post-header">
         <div className="edu-post-user">
           <div className="edu-post-avatar-wrap">
@@ -125,16 +122,13 @@ function Post({ post }) {
         </div>
       </div>
 
-      {/* Image */}
       {post.image && (
         <div className="edu-post-image">
           <img src={post.image} alt="Post" />
         </div>
       )}
 
-      {/* Content */}
       <div className="edu-post-content">
-        {/* Actions */}
         <div className="edu-post-actions">
           <div className="edu-post-actions-left">
             <button onClick={handleLike} className={`edu-action-btn ${liked ? 'liked' : ''}`}>
@@ -150,16 +144,13 @@ function Post({ post }) {
           </button>
         </div>
 
-        {/* Likes */}
         <p className="edu-post-likes">{formatNumber(likes)} likes</p>
 
-        {/* Caption */}
         <div className="edu-post-caption">
           <span className="edu-post-caption-user">{post.author.username}</span>{' '}
           <span className="edu-post-caption-text">{post.content}</span>
         </div>
 
-        {/* Quiz */}
         {post.quiz && (
           <div className="edu-quiz">
             <p className="edu-quiz-label">Quick check</p>
@@ -187,32 +178,25 @@ function Post({ post }) {
                 </div>
               </div>
             )}
-            {post.quiz.commentPrompt && (
-              <p className="edu-quiz-prompt">{post.quiz.commentPrompt}</p>
-            )}
           </div>
         )}
 
-        {/* Tags */}
         <div className="edu-post-tags">
           {post.tags.map((tag) => (
             <span key={tag} className="edu-post-tag">#{tag}</span>
           ))}
         </div>
 
-        {/* Time */}
         <p className="edu-post-time">{post.time}</p>
 
-        {/* Comments */}
         <button className="edu-post-comments-btn" onClick={() => setShowComments(!showComments)}>
           View all {post.comments} comments
         </button>
 
-        {/* Comments Section */}
         {showComments && (
           <div className="edu-comments-section">
             <div className="edu-comment-input-wrap">
-              <input type="text" placeholder={post.quiz?.commentPrompt || "Add a comment..."} className="edu-comment-input" />
+              <input type="text" placeholder="Add a comment..." className="edu-comment-input" />
               <button className="edu-comment-send">Post</button>
             </div>
           </div>
@@ -222,7 +206,6 @@ function Post({ post }) {
   )
 }
 
-// Category Header Component
 function CategoryHeader({ category, postCount }) {
   return (
     <div className="edu-category-header">
@@ -237,7 +220,6 @@ function CategoryHeader({ category, postCount }) {
   )
 }
 
-// Empty State Component
 function EmptyState() {
   return (
     <div className="edu-empty-state">
@@ -252,17 +234,40 @@ function EmptyState() {
 
 export default function FeedPage() {
   const [selectedCategory, setSelectedCategory] = useState('All')
+  const [stories, setStories] = useState([])
+  const [allPosts, setAllPosts] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [storiesData, postsData] = await Promise.all([
+          getStories(),
+          getPosts()
+        ])
+        setStories(storiesData)
+        setAllPosts(postsData)
+      } catch (err) {
+        console.error('Error loading feed data:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadData()
+  }, [])
 
   const filteredPosts = selectedCategory === 'All' 
     ? allPosts 
     : allPosts.filter(post => post.category === selectedCategory)
 
+  if (loading) {
+    return <div className="edu-feed"><p style={{ padding: '2rem', textAlign: 'center' }}>Loading...</p></div>
+  }
+
   return (
     <div className="edu-feed">
-      {/* Stories */}
-      <Stories />
+      <Stories stories={stories} />
 
-      {/* Category Filter */}
       <div className="edu-category-filter">
         {categories.map((cat) => (
           <button
@@ -276,22 +281,18 @@ export default function FeedPage() {
         ))}
       </div>
 
-      {/* Category Header (when filtered) */}
       {selectedCategory !== 'All' && (
         <CategoryHeader category={selectedCategory} postCount={filteredPosts.length} />
       )}
 
-      {/* Posts */}
       <div className="edu-posts">
         {filteredPosts.map((post) => (
           <Post key={post.id} post={post} />
         ))}
       </div>
 
-      {/* Empty State */}
       {filteredPosts.length === 0 && <EmptyState />}
 
-      {/* Load More */}
       {filteredPosts.length > 0 && (
         <div className="edu-load-more">
           <button className="edu-load-more-btn">Load more posts</button>

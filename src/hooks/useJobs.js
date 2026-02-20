@@ -1,13 +1,11 @@
 /**
  * Custom hook for loading jobs from SQLite database
- * Falls back to JSON data if database is unavailable
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { getJobs, getJobCount, isDatabaseAvailable } from '../services/database'
-import jobsData from '../data/jobs.json'
 
-// Fallback jobs when no data available
+// Fallback jobs when database is empty
 const fallbackJobs = [
   {
     id: '1',
@@ -37,15 +35,12 @@ const fallbackJobs = [
   },
 ]
 
-// Extract unique values from jobs array
 function extractUniqueValues(jobs, field) {
   const values = new Set()
   jobs.forEach(job => {
     if (job[field]) {
-      // Clean up location - extract city/province name
       let value = job[field]
       if (field === 'location') {
-        // Remove "(mới)" suffix and trim
         value = value.replace(/\s*\(mới\)\s*/gi, '').trim()
       }
       if (value) values.add(value)
@@ -58,10 +53,8 @@ export function useJobs() {
   const [allJobs, setAllJobs] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [source, setSource] = useState(null) // 'sqlite', 'json', or 'fallback'
+  const [source, setSource] = useState(null)
   const [totalCount, setTotalCount] = useState(0)
-  
-  // Filter states
   const [categoryFilter, setCategoryFilter] = useState('')
   const [locationFilter, setLocationFilter] = useState('')
 
@@ -70,7 +63,6 @@ export function useJobs() {
     setError(null)
 
     try {
-      // Try SQLite first
       const dbAvailable = await isDatabaseAvailable()
       
       if (dbAvailable) {
@@ -80,31 +72,17 @@ export function useJobs() {
         setTotalCount(count)
         setSource('sqlite')
         console.log(`Loaded ${dbJobs.length} jobs from SQLite`)
-      } else if (jobsData.jobs && jobsData.jobs.length > 0) {
-        // Fall back to JSON
-        setAllJobs(jobsData.jobs)
-        setTotalCount(jobsData.count || jobsData.jobs.length)
-        setSource('json')
-        console.log(`Loaded ${jobsData.jobs.length} jobs from JSON`)
       } else {
-        // Use fallback dummy data
         setAllJobs(fallbackJobs)
         setTotalCount(fallbackJobs.length)
         setSource('fallback')
-        console.log('Using fallback jobs')
+        console.log('Using fallback jobs - database empty')
       }
     } catch (err) {
       console.error('Error loading jobs:', err)
       setError(err.message)
-      
-      // Try JSON fallback on error
-      if (jobsData.jobs && jobsData.jobs.length > 0) {
-        setAllJobs(jobsData.jobs)
-        setSource('json')
-      } else {
-        setAllJobs(fallbackJobs)
-        setSource('fallback')
-      }
+      setAllJobs(fallbackJobs)
+      setSource('fallback')
     } finally {
       setLoading(false)
     }
@@ -114,11 +92,9 @@ export function useJobs() {
     loadJobs()
   }, [loadJobs])
 
-  // Extract unique categories and locations
   const categories = useMemo(() => extractUniqueValues(allJobs, 'category'), [allJobs])
   const locations = useMemo(() => extractUniqueValues(allJobs, 'location'), [allJobs])
 
-  // Filter jobs based on selected filters
   const jobs = useMemo(() => {
     return allJobs.filter(job => {
       const matchCategory = !categoryFilter || job.category === categoryFilter
@@ -136,7 +112,6 @@ export function useJobs() {
     source,
     totalCount,
     refresh: loadJobs,
-    // Filter related
     categories,
     locations,
     categoryFilter,

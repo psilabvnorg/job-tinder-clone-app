@@ -1,5 +1,5 @@
 """
-View first 5 rows of all tables in SQLite database
+View first 2 rows of all tables in SQLite database
 
 Usage: python view-db.py
 """
